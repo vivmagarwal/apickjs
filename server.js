@@ -9,5 +9,5 @@ let app = new Apickjs(db);
 // app.use(customMiddleware());
 
 app.listen(3000, () => {
-  console.log('APICK Server is running on port 3000');
+  console.log('APICK Server is running on port 3000'); 
 });
