@@ -13,6 +13,7 @@ export default function dynamicRoutes(database) {
 
         // Define the routes
         router.get(`/${entry}`, controller.get);
+        router.get(`/${entry}/:id`, controller.get);
         router.post(`/${entry}`, controller.post);
         router.put(`/${entry}/:id`, controller.put);
         router.patch(`/${entry}/:id`, controller.patch);

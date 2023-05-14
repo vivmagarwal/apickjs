@@ -2,8 +2,43 @@
   "posts": [
     {
       "id": 1,
-      "title": "json-server",
-      "author": "typicode"
+      "title": "Awesome blogpost by user 2",
+      "userId": 2
+    },
+    {
+      "id": 2,
+      "title": "Awesome blogpost by user 1",
+      "userId": 1
+    },
+    {
+      "id": 3,
+      "title": "Awesome blogpost again by user 1",
+      "userId": 1
+    },
+    {
+      "id": 4,
+      "title": "Okay blogpost by user 2",
+      "userId": 2
+    },
+    {
+      "id": 5,
+      "title": "Boring blogpost by user 2",
+      "userId": 2
+    },
+    {
+      "id": 6,
+      "title": "Sleepy blogpost by user 2",
+      "userId": 2
+    },
+    {
+      "id": 7,
+      "title": "Zero blogpost by user 2",
+      "userId": 2
+    },
+    {
+      "id": 8,
+      "title": "A-one blogpost by user 2",
+      "userId": 2
     }
   ],
   "comments": [
@@ -11,10 +46,202 @@
       "id": 1,
       "body": "some comment",
       "postId": 1
+    },
+    {
+      "id": 2,
+      "body": "another comment",
+      "postId": 1
     }
   ],
-  "profile": {
-    "name": "typicode"
-  },
-  "undefined": []
+  "orders": [
+    {
+      "id": 1,
+      "userId": 1,
+      "items": [
+        {
+          "productId": 1,
+          "quantity": 2
+        },
+        {
+          "productId": 2,
+          "quantity": 1
+        }
+      ],
+      "discount": 0
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "items": [
+        {
+          "productId": 3,
+          "quantity": 3
+        },
+        {
+          "productId": 4,
+          "quantity": 1
+        }
+      ],
+      "discount": 100
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "brand": "Zebronics",
+      "img": "https://adn-static1.nykaa.com/nykdesignstudio-images/tr:w-550,/pub/media/catalog/product/n/y/nyfboat000113_1_cc965b26.jpg?rnd=20200526195200",
+      "price": 100,
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, sequi.",
+      "category": "Laptop"
+    },
+    {
+      "id": 2,
+      "brand": "Zebronics",
+      "img": "https://adn-static1.nykaa.com/nykdesignstudio-images/tr:w-550,/pub/media/catalog/product/n/y/nyfblta000011_1.jpg?rnd=20200526195200",
+      "price": 120,
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, sequi.",
+      "category": "Mobile"
+    },
+    {
+      "id": 3,
+      "brand": "Zebronics",
+      "img": "https://adn-static1.nykaa.com/nykdesignstudio-images/tr:w-550,/pub/media/catalog/product/b/c/bc60a_1_c82d81cb.jpg?rnd=20200526195200",
+      "price": 130,
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, sequi.",
+      "category": "Head_Phones"
+    },
+    {
+      "id": 4,
+      "brand": "Zebronics",
+      "img": "https://adn-static1.nykaa.com/nykdesignstudio-images/tr:w-550,/pub/media/catalog/product/6/1/619660798426_1_727221ba.jpg?rnd=20200526195200",
+      "price": 100,
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, sequi.",
+      "category": "Speakers"
+    },
+    {
+      "id": 5,
+      "brand": "Zebronics",
+      "img": "https://adn-static1.nykaa.com/nykdesignstudio-images/tr:w-550,/pub/media/catalog/product/c/_/c_8907605107849_1_655fcbdf.jpg?rnd=20200526195200",
+      "price": 200,
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, sequi.",
+      "category": "Smart_TV"
+    },
+    {
+      "id": 6,
+      "brand": "Apple",
+      "img": "https://adn-static1.nykaa.com/nykdesignstudio-images/tr:w-550,/pub/media/catalog/product/c/o/cor-nyfcrca000039_1_369033fe.jpg?rnd=20200526195200",
+      "price": 235,
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, sequi.",
+      "category": "Laptop"
+    },
+    {
+      "id": 7,
+      "brand": "Apple",
+      "img": "https://adn-static1.nykaa.com/nykdesignstudio-images/tr:w-550,/pub/media/catalog/product/a/m/ambrane_8904258106557_1_aff3c266.jpg?rnd=20200526195200",
+      "price": 250,
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, sequi.",
+      "category": "Mobile"
+    },
+    {
+      "id": 8,
+      "brand": "Apple",
+      "img": "https://adn-static1.nykaa.com/nykdesignstudio-images/tr:w-550,/pub/media/catalog/product/n/y/nyfblta000009_1.jpg?rnd=20200526195200",
+      "price": 100,
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, sequi.",
+      "category": "Head_Phones"
+    },
+    {
+      "id": 9,
+      "brand": "Apple",
+      "img": "https://adn-static1.nykaa.com/nykdesignstudio-images/tr:w-550,/pub/media/catalog/product/z/b/zb_8906108615899_1_44867a4c.jpg?rnd=20200526195200",
+      "price": 325,
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, sequi.",
+      "category": "Speakers"
+    },
+    {
+      "id": 10,
+      "brand": "Apple",
+      "img": "https://adn-static1.nykaa.com/nykdesignstudio-images/tr:w-550,/pub/media/catalog/product/u/d/ud_bk_1_2f275806.jpg?rnd=20200526195200",
+      "price": 350,
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, sequi.",
+      "category": "Smart_TV"
+    },
+    {
+      "id": 11,
+      "brand": "HP",
+      "img": "https://adn-static1.nykaa.com/nykdesignstudio-images/tr:w-550,/pub/media/catalog/product/g/r/grey_1_398b5873.jpg?rnd=20200526195200",
+      "price": 375,
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, sequi.",
+      "category": "Laptop"
+    },
+    {
+      "id": 12,
+      "brand": "HP",
+      "img": "https://adn-static1.nykaa.com/nykdesignstudio-images/tr:w-550,/pub/media/catalog/product/b/o/boult-audio-ba-nk-freepods-black_1_17c2dc71.jpg?rnd=20200526195200",
+      "price": 100,
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, sequi.",
+      "category": "Mobile"
+    },
+    {
+      "id": 13,
+      "brand": "HP",
+      "img": "https://adn-static1.nykaa.com/nykdesignstudio-images/tr:w-550,/pub/media/catalog/product/d/i/dive_green_1.jpg?rnd=20200526195200",
+      "price": 500,
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, sequi.",
+      "category": "Head_Phones"
+    },
+    {
+      "id": 14,
+      "brand": "HP",
+      "img": "https://adn-static1.nykaa.com/nykdesignstudio-images/tr:w-550,/pub/media/catalog/product/p/e/pebble-8906086572115_1_34a9b9fd.jpg?rnd=20200526195200",
+      "price": 1000,
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, sequi.",
+      "category": "Speakers"
+    },
+    {
+      "id": 15,
+      "brand": "HP",
+      "img": "https://adn-static1.nykaa.com/nykdesignstudio-images/tr:w-550,/pub/media/catalog/product/p/p/pportronics-por-1195_1_e9dc8e9f.jpg?rnd=20200526195200",
+      "price": 750,
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, sequi.",
+      "category": "Smart_TV"
+    },
+    {
+      "id": 16,
+      "brand": "Dell",
+      "img": "https://adn-static1.nykaa.com/nykdesignstudio-images/tr:w-550,/pub/media/catalog/product/m/u/musebud_grey.jpg?rnd=20200526195200",
+      "price": 1500,
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, sequi.",
+      "category": "Laptop"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "admin",
+      "firstName": "Vivek",
+      "lastName": "Agarwal",
+      "avatar": "https://reqres.in/img/faces/9-image.jpg",
+      "email": "admin@mail.com"
+    },
+    {
+      "id": 2,
+      "username": "john",
+      "password": "john",
+      "firstName": "John",
+      "lastName": "Doe",
+      "avatar": "https://reqres.in/img/faces/8-image.jpg",
+      "email": "john@mail.com"
+    },
+    {
+      "id": 3,
+      "username": "jane",
+      "password": "jane",
+      "firstName": "Jane",
+      "lastName": "Doe",
+      "avatar": "https://reqres.in/img/faces/7-image.jpg",
+      "email": "jane@mail.com"
+    }
+  ]
 }

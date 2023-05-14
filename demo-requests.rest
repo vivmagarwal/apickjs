@@ -1,0 +1,49 @@
+GET http://localhost:3000/posts
+
+###
+
+GET http://localhost:3000/posts/1
+
+###
+
+GET http://localhost:3000/posts?q=post&userId=2&_sort=title&_order=asc&_limit=3&_page=1
+
+###
+
+GET http://localhost:3000/posts?q=again
+
+###
+
+GET http://localhost:3000/posts
+
+###
+
+PUT  http://localhost:3000/posts/4
+Content-Type: application/json
+
+{
+  "title": "Okay blogpost by user 3",
+  "userId": 3,
+  "id": 4
+}
+
+###
+
+PATCH  http://localhost:3000/posts/4
+Content-Type: application/json
+
+{
+  "userId": 2
+}
+
+
+###
+
+POST  http://localhost:3000/posts
+Content-Type: application/json
+
+{
+  "id": 8,
+  "title": "A-one blogpost by user 2",
+  "userId": 2
+}
