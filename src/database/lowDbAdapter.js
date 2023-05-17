@@ -15,9 +15,12 @@ class LowDBAdapter {
   }
 
   async get(collectionName, ctx) {
-    let queryParams = ctx.query;
-    let id = ctx.params.id;
-    let body = ctx.request.body;
+
+    console.log(ctx);
+
+    let queryParams = ctx?.query;
+    let id = ctx?.params?.id;
+    let body = ctx?.request?.body;
 
     await this.db.read();
 
@@ -28,14 +31,31 @@ class LowDBAdapter {
       data = applyCustomFilters(data, [['id', id]]);
     }
   
-    if (Object.keys(queryParams).length > 0) {
+    if (queryParams && Object.keys(queryParams).length > 0) {
       // while writing adapters make sure that the data is in the form of an array.
       data = getFilteredDataHandler(data, queryParams);
     }
 
-    ctx.set('X-Total-Count', xTotalCount);
+    ctx && ctx.set && ctx.set('X-Total-Count', xTotalCount);
+
+
     return data;
   }  
+
+  
+  async read(collectionName) {
+    await this.db.read();
+    let data = this.db.data[collectionName];
+    return data;
+  }
+
+  async find(collectionName, filterOptions) {
+   // filterOptions = [['id',1],['title','someting']]
+
+    await this.db.read();
+    let data = this.db.data[collectionName];
+    return applyCustomFilters(data, filterOptions);
+  }
 
   async getCollections() {
     await this.db.read();
@@ -58,41 +78,12 @@ class LowDBAdapter {
     return maxId;
   }
 
-  // async getEntries(collectionName) {
-  //   await this.db.read();
-  //   if (!this.db.data[collectionName]) {
-  //     this.db.data[collectionName] = [];
-  //     await this.db.write();
-  //   }
-  //   return this.db.data[collectionName];
-  // }
-
-  // async find(collectionName, query) {
-  //   await this.db.read();
-  //   return this.db.data[collectionName].filter(query);
-  // }
-
-  // async findOne(collectionName, query) {
-  //   await this.db.read();
-  //   return this.db.data[collectionName].find(query);
-  // }
-
   async insert(collectionName, doc) {
     await this.db.read();
     this.db.data[collectionName].push(doc);
     await this.db.write();
     return doc;
   }
-
-  // async update(collectionName, doc) {
-  //   await this.db.read();
-  //   const index = this.db.data[collectionName].findIndex(({ id }) => id === doc.id);
-  //   if (index !== -1) {
-  //     this.db.data[collectionName][index] = doc;
-  //     await this.db.write();
-  //   }
-  //   return doc;
-  // }
 
   async update(collectionName, id, doc) {
     await this.db.read();

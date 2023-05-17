@@ -6,7 +6,17 @@ let app = new Apickjs(db);
 
 
 // You can use custom middleware here if needed
-// app.use(customMiddleware());
+function logHelloWorldMiddleware() {
+  return async function(ctx, next) {
+    console.log("** Hello World **");
+    await next();
+  };
+}
+
+app.use(logHelloWorldMiddleware());
+
+// it is required to use default and custom middlewares.
+app.initMiddlewares();
 
 app.listen(3000, () => {
   console.log('APICK Server is running on port 3000'); 

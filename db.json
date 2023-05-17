@@ -90,6 +90,31 @@
       "title": "A-one blogpost ",
       "userId": 91,
       "id": 117
+    },
+    {
+      "title": "A-one blogpost ",
+      "userId": 91,
+      "id": 118
+    },
+    {
+      "title": "A-one blogpost ",
+      "userId": 91,
+      "id": 119
+    },
+    {
+      "title": "A-one blogpost ",
+      "userId": 91,
+      "id": 120
+    },
+    {
+      "title": "A-one blogpost ",
+      "userId": 91,
+      "id": 121
+    },
+    {
+      "title": "A-one blogpost ",
+      "userId": 91,
+      "id": 122
     }
   ],
   "comments": [
@@ -293,6 +318,25 @@
       "lastName": "Doe",
       "avatar": "https://reqres.in/img/faces/7-image.jpg",
       "email": "jane@mail.com"
+    },
+    {
+      "username": "vivek",
+      "password": "$2b$10$hm6KDoTUoSidk2FPSTk4suxJHTSwnrjPEnBr9x6.pIHmeN9zELU9u"
+    }
+  ],
+  "protected-routes": [
+    {
+      "orders": [
+        "GET"
+      ]
+    },
+    {
+      "products": [
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ]
     }
   ]
 }
