@@ -7,6 +7,9 @@ export function fullTextSearch(data, query) {
 }
 
 export function applyCustomFilters(data, customFilters) {
+  console.log(data, customFilters)
+  console.log('#########')
+
   const filteredData = [];
 
   for (const item of data) {

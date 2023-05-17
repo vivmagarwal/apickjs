@@ -15,34 +15,31 @@ class LowDBAdapter {
   }
 
   async get(collectionName, ctx) {
-
-    console.log(ctx);
-
     let queryParams = ctx?.query;
     let id = ctx?.params?.id;
     let body = ctx?.request?.body;
+
+    console.log("> queryParams", ctx.query);
 
     await this.db.read();
 
     let data = this.db.data[collectionName];
     let xTotalCount = data.length;
-  
+
     if (id) {
-      data = applyCustomFilters(data, [['id', id]]);
+      data = applyCustomFilters(data, [["id", id]]);
     }
-  
+
     if (queryParams && Object.keys(queryParams).length > 0) {
       // while writing adapters make sure that the data is in the form of an array.
       data = getFilteredDataHandler(data, queryParams);
     }
 
-    ctx && ctx.set && ctx.set('X-Total-Count', xTotalCount);
-
+    ctx && ctx.set && ctx.set("X-Total-Count", xTotalCount);
 
     return data;
-  }  
+  }
 
-  
   async read(collectionName) {
     await this.db.read();
     let data = this.db.data[collectionName];
@@ -50,7 +47,7 @@ class LowDBAdapter {
   }
 
   async find(collectionName, filterOptions) {
-   // filterOptions = [['id',1],['title','someting']]
+    // filterOptions = [['id',1],['title','someting']]
 
     await this.db.read();
     let data = this.db.data[collectionName];
@@ -64,17 +61,21 @@ class LowDBAdapter {
 
   async getMaxId(collectionName) {
     await this.db.read();
-  
+
+    console.log("&&&&&&&&&&&&&", collectionName);
+    //  console.log(this.db.data)
+    console.log(this.db.data[collectionName]);
+
     // Check if the collection exists
     if (!this.db.data[collectionName]) {
       return 0;
     }
-  
+
     // Get the max id
     const maxId = this.db.data[collectionName].reduce((max, item) => {
       return item.id > max ? item.id : max;
     }, 0);
-  
+
     return maxId;
   }
 
@@ -139,6 +140,21 @@ class LowDBAdapter {
       await this.db.write();
     }
     return doc;
+  }
+
+  async createCollection(collectionName) {
+    await this.db.read();
+
+    // Check if the collection already exists
+    if (this.db.data[collectionName]) {
+      throw new Error(`Collection ${collectionName} already exists`);
+    }
+
+    // Create a new collection by adding a new array to the data
+    this.db.data[collectionName] = [];
+
+    // Write the changes to the database
+    await this.db.write();
   }
 }
 

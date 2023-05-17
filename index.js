@@ -6,6 +6,8 @@ import auth from './src/middlewares/auth.js';
 import dynamicRoutes from './src/middlewares/dynamicRoutes.js';
 import autoIncrementId from './src/middlewares/autoIncrementId.js';
 import logger from './src/middlewares/logger.js';
+import bcrypt from 'bcrypt';
+
 
 
 class Apickjs {
@@ -13,7 +15,21 @@ class Apickjs {
     this.app = new Koa();
     this.database = new LowDBAdapter(dbName);
     this.preRouteMiddlewares = [];
+    this.createUsersIfDoesNotExist();
     // this.initMiddlewares();
+  }
+
+
+  async createUsersIfDoesNotExist() {
+    const collections = await this.database.getCollections();
+    if (!collections.users) {
+      await this.database.createCollection("users");
+      await this.database.insert("users", {
+        id: 1,
+        username: "admin",
+        password: await bcrypt.hash("admin", 10),
+      });
+    }
   }
 
   initMiddlewares() {
@@ -37,8 +53,14 @@ class Apickjs {
   }
 
   listen(...args) {
-    this.app.listen(...args);
+    const server = this.app.listen(...args);
+    server.on('listening', () => {
+      const addressInfo = server.address();
+      this.port = typeof addressInfo === 'string' ? addressInfo : addressInfo.port;
+    });
+    return server;
   }
+  
 }
 
 export default Apickjs;

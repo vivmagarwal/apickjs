@@ -18,6 +18,6 @@ app.use(logHelloWorldMiddleware());
 // it is required to use default and custom middlewares.
 app.initMiddlewares();
 
-app.listen(3000, () => {
-  console.log('APICK Server is running on port 3000'); 
+app.listen(0, () => {
+  console.log(`APICK Server is running on port ${app.port}`); 
 });

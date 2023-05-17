@@ -26,11 +26,14 @@ export default function dynamicRoutes({database}) {
 
       // Register route
       router.post('/register', async (ctx) => {
-        const { username, password } = ctx.request.body;
+        const { username, password, id } = ctx.request.body;
         const hashedPassword = await bcrypt.hash(password, 10);
-  
+
+
+        const newUserId = id || await database.getMaxId('users') + 1;
+
         // Insert new user
-        const newUser = await database.insert('users', { username, password: hashedPassword });
+        const newUser = await database.insert('users', { username, password: hashedPassword, id: newUserId });
         ctx.body = newUser;
       });
   
@@ -40,6 +43,10 @@ export default function dynamicRoutes({database}) {
         const user = (await database.find('users', [['username', username]]))[0];
 
         console.log(user, 'user')
+
+        if (!user) {
+          ctx.throw(401, 'Invalid username');
+        }
   
         // Verify the password
         const valid = await bcrypt.compare(password, user.password);

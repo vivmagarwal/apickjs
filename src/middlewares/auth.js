@@ -1,3 +1,5 @@
+import jwt from "koa-jwt";
+
 export default function auth({ database }) {
   return async (ctx, next) => {
     if (ctx.path === "/login" || ctx.path === "/register") {
@@ -11,9 +13,14 @@ export default function auth({ database }) {
       // [ { "posts": ["GET"] }]
       const route = ctx.request.path.split("/")[1];
 
-      if (Object.keys(protectedRoutes).includes(route)) {
-        const protectedMethods = protectedRoutes.find((r) => r[route])[route];
+      console.log("route **", route);
 
+      let routeObject = protectedRoutes.find((obj) => obj[route]);
+
+      console.log("route object ***", routeObject);
+
+      if (routeObject) {
+        let protectedMethods = routeObject ? routeObject[route] : [];
         console.log("protectedMethods **", protectedMethods);
 
         // If the route is not protected or the method is not protected, bypass this middleware
