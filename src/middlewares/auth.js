@@ -7,21 +7,10 @@ export default function auth({ database }) {
     } else {
       // Check if the route is protected
       const protectedRoutes = await database.read("protected-routes");
-
-      console.log("protectedRoutes **", protectedRoutes);
-
-      // [ { "posts": ["GET"] }]
       const route = ctx.request.path.split("/")[1];
-
-      console.log("route **", route);
-
       let routeObject = protectedRoutes.find((obj) => obj[route]);
-
-      console.log("route object ***", routeObject);
-
       if (routeObject) {
         let protectedMethods = routeObject ? routeObject[route] : [];
-        console.log("protectedMethods **", protectedMethods);
 
         // If the route is not protected or the method is not protected, bypass this middleware
         if (!protectedMethods || !protectedMethods.includes(ctx.method)) {

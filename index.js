@@ -12,11 +12,9 @@ import bcrypt from 'bcrypt';
 
 class Apickjs {
   constructor(dbName) {
-    this.app = new Koa();
+    this._app = new Koa();
     this.database = new LowDBAdapter(dbName);
     this.preRouteMiddlewares = [];
-    this.createUsersIfDoesNotExist();
-    // this.initMiddlewares();
   }
 
 
@@ -32,37 +30,59 @@ class Apickjs {
     }
   }
 
+  async createProtectedIfDoesNotExist() {
+    const collections = await this.database.getCollections();
+    if (!collections['protected-routes']) {
+      await this.database.createCollection("protected-routes");
+    }
+  }
+
   initMiddlewares() {
-    this.app.use(koaBody());
-    this.app.use(cors());
+    this._app.use(koaBody());
+    this._app.use(cors());
 
     // Register the generated routes middleware
     
     for (let middleware of this.preRouteMiddlewares) {
-      this.app.use(middleware);
+      this._app.use(middleware);
     }
     
-    this.app.use(auth(this));
-    this.app.use(logger())
-    this.app.use(autoIncrementId(this));
-    this.app.use(dynamicRoutes(this)); // typically route handlers are at the end of the middleware chain and don't call next() 
+    this._app.use(auth(this));
+    this._app.use(logger())
+    this._app.use(autoIncrementId(this));
+    this._app.use(dynamicRoutes(this)); // typically route handlers are at the end of the middleware chain and don't call next() 
   }
 
   use(middleware) {
     this.preRouteMiddlewares.push(middleware);
   }
 
-  listen(...args) {
-    const server = this.app.listen(...args);
-    server.on('listening', () => {
-      const addressInfo = server.address();
-      this.port = typeof addressInfo === 'string' ? addressInfo : addressInfo.port;
-    });
-    return server;
+  extend(middleware) {
+    this.preRouteMiddlewares.push(middleware);
   }
-  
+
+  listen(...args) {
+    this.initMiddlewares();
+    this.server = this._app.listen(...args);
+    return this.server;
+  }
+
+
+  static  async create(dbName) {
+    const instance = new Apickjs(dbName);
+    await instance.createUsersIfDoesNotExist();
+    await instance.createProtectedIfDoesNotExist();
+    return instance;
+  }
 }
 
 export default Apickjs;
+
+
+
+
+
+
+
 
 

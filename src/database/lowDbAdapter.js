@@ -19,8 +19,6 @@ class LowDBAdapter {
     let id = ctx?.params?.id;
     let body = ctx?.request?.body;
 
-    console.log("> queryParams", ctx.query);
-
     await this.db.read();
 
     let data = this.db.data[collectionName];
@@ -61,10 +59,6 @@ class LowDBAdapter {
 
   async getMaxId(collectionName) {
     await this.db.read();
-
-    console.log("&&&&&&&&&&&&&", collectionName);
-    //  console.log(this.db.data)
-    console.log(this.db.data[collectionName]);
 
     // Check if the collection exists
     if (!this.db.data[collectionName]) {

@@ -42,8 +42,6 @@ export default function dynamicRoutes({database}) {
         const { username, password } = ctx.request.body;
         const user = (await database.find('users', [['username', username]]))[0];
 
-        console.log(user, 'user')
-
         if (!user) {
           ctx.throw(401, 'Invalid username');
         }
