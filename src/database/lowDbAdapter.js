@@ -42,24 +42,40 @@ class LowDBAdapter {
     return this.db.data;
   }
 
-  async getEntries(collectionName) {
+  async getMaxId(collectionName) {
     await this.db.read();
+  
+    // Check if the collection exists
     if (!this.db.data[collectionName]) {
-      this.db.data[collectionName] = [];
-      await this.db.write();
+      return 0;
     }
-    return this.db.data[collectionName];
+  
+    // Get the max id
+    const maxId = this.db.data[collectionName].reduce((max, item) => {
+      return item.id > max ? item.id : max;
+    }, 0);
+  
+    return maxId;
   }
 
-  async find(collectionName, query) {
-    await this.db.read();
-    return this.db.data[collectionName].filter(query);
-  }
+  // async getEntries(collectionName) {
+  //   await this.db.read();
+  //   if (!this.db.data[collectionName]) {
+  //     this.db.data[collectionName] = [];
+  //     await this.db.write();
+  //   }
+  //   return this.db.data[collectionName];
+  // }
 
-  async findOne(collectionName, query) {
-    await this.db.read();
-    return this.db.data[collectionName].find(query);
-  }
+  // async find(collectionName, query) {
+  //   await this.db.read();
+  //   return this.db.data[collectionName].filter(query);
+  // }
+
+  // async findOne(collectionName, query) {
+  //   await this.db.read();
+  //   return this.db.data[collectionName].find(query);
+  // }
 
   async insert(collectionName, doc) {
     await this.db.read();

@@ -4,6 +4,7 @@ import cors from '@koa/cors';
 import LowDBAdapter from './src/database/lowDbAdapter.js';
 import auth from './src/middlewares/auth.js';
 import dynamicRoutes from './src/middlewares/dynamicRoutes.js';
+import autoIncrementId from './src/middlewares/autoIncrementId.js';
 
 class Apickjs {
   constructor(dbName) {
@@ -17,7 +18,8 @@ class Apickjs {
     this.app.use(cors());
     // this.app.use(auth());
     // Register the generated routes middleware
-    this.app.use(dynamicRoutes(this.database))
+    this.app.use(autoIncrementId(this));
+    this.app.use(dynamicRoutes(this))
   }
 
   use(middleware) {
