@@ -150,6 +150,23 @@ class LowDBAdapter {
     // Write the changes to the database
     await this.db.write();
   }
+
+  async renameCollection(oldCollectionName, newCollectionName) {
+    await this.db.read();
+  
+    if (this.db.data[oldCollectionName]) {
+      this.db.data[newCollectionName] = this.db.data[oldCollectionName];
+      delete this.db.data[oldCollectionName];
+      await this.db.write();
+    } else {
+      throw new Error(`Collection ${oldCollectionName} not found`);
+    }
+  }
+  
+
+
 }
+
+
 
 export default LowDBAdapter;

@@ -7,7 +7,7 @@ import dynamicRoutes from './src/middlewares/dynamicRoutes.js';
 import autoIncrementId from './src/middlewares/autoIncrementId.js';
 import logger from './src/middlewares/logger.js';
 import bcrypt from 'bcrypt';
-
+import serve from 'koa-static';
 
 
 class Apickjs {
@@ -47,12 +47,13 @@ class Apickjs {
       this._app.use(middleware);
     }
     
+    this._app.use(serve('./public'));
     this._app.use(auth(this));
     this._app.use(logger())
     this._app.use(autoIncrementId(this));
     this._app.use(dynamicRoutes(this)); // typically route handlers are at the end of the middleware chain and don't call next() 
   }
-
+ 
   use(middleware) {
     this.preRouteMiddlewares.push(middleware);
   }

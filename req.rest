@@ -17,7 +17,8 @@ GET http://localhost:3000/posts?id_gte=3&id_lte=10
 
 ###
 
-GET http://localhost:3000/orders
+GET http://localhost:3000/users 
+
 
 ###
 
@@ -38,3 +39,29 @@ Content-Type: application/json
   "username" : "rahul",
   "password" : "rahul"
 }
+
+### Special for admin purpose only
+
+GET http://localhost:3000/__db
+
+###
+
+GET http://localhost:3000/__collections
+
+###
+POST http://localhost:3000/__collections
+Content-Type: application/json
+
+{
+  "name": "new-todos"
+}
+
+###
+
+PATCH http://localhost:3000/__collections/todos
+Content-Type: application/json
+
+{
+  "name": "todos-extra-two"
+}
+
