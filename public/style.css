@@ -1,113 +1,88 @@
+/* LinkedIn-like Styling */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
 body {
-  display: flex;
-  min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-  flex-direction: column;
-  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  color: #333333;
   margin: 0;
-  color: #3b4252;
-  letter-spacing: 0;
+  padding: 0;
+  background-color: #f3f2ef;
 }
 
 .container {
-  max-width: 960px;
+  width: 80%;
   margin: auto;
-  padding: 1rem;
+  max-width: 1128px;
 }
 
 header {
-  border-bottom: 1px solid #eee;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 10px 0;
 }
 
-header a {
-  color: inherit;
-  text-decoration: none;
-}
-
-header a:hover {
-  text-decoration: underline;
+header h1 {
+  color: #0073b1; /* LinkedIn Blue */
+  font-weight: 400;
+  margin: 0;
 }
 
 nav ul {
+  list-style: none;
+  padding: 0;
   display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
+  justify-content: center;
 }
 
-nav li.title {
-  flex-grow: 5;
-  text-align: left;
+nav ul li {
+  margin: 0 15px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #0073b1; /* LinkedIn Blue */
   font-weight: bold;
-  font-size: 1.4rem;
-  color: #3b4252;
-}
-
-nav li {
-  flex-grow: 1;
-  align-self: center;
-  text-align: right;
-  color: #4c566a;
-}
-
-.fa-heart {
-  color: deeppink;
 }
 
 main {
-  flex: 1;
+  background-color: #ffffff;
+  margin-top: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 footer {
-  margin-top: 4rem;
-  border-top: 1px solid #eee;
+  background-color: #ffffff;
+  border-top: 1px solid #e0e0e0;
+  padding: 10px 0;
+  text-align: center;
+  margin-top: 20px;
 }
 
-h1 {
-  margin-top: 4rem;
-  font-weight: normal;
-}
-
-i {
-  margin-right: 0.5rem;
+footer p {
+  margin: 0;
 }
 
 a {
-  color: #5e81ac;
+  color: #0073b1;
 }
 
 a:hover {
-  color: #81a1c1;
   text-decoration: underline;
 }
 
-table {
-  margin-left: 0;
+button, .button {
+  background-color: #0073b1;
+  color: #ffffff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-td {
-  border: 0;
-  padding: 0 1em 0.5em 0;
+button:hover, .button:hover {
+  background-color: #005682;
 }
 
-td:first-child {
-  width: 1%;
-  white-space: nowrap;
-}
-
-ul {
-  list-style-position: inside;
-  padding-left: 0;
-}
-
-li {
-  list-style-type: none;
-  margin-bottom: 0.2rem;
-}
-
-code {
-  padding: 0.2rem;
-  margin: 0rem 0.2rem;
-  border-radius: 0.2rem;
-  background: #e5e9f0;
-}
+/* Add your additional styles here */

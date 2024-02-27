@@ -36,12 +36,9 @@ function ResourcesBlock({ db }) {
 }
 
 window
-  .fetch('db')
+  .fetch("__db")
   .then((response) => response.json())
-  .then(
-    (db) =>
-      (document.getElementById('resources').innerHTML = ResourcesBlock({ db })),
-  )
+  .then((db) => (document.getElementById("resources").innerHTML = ResourcesBlock({ db })));
 
 function CustomRoutesBlock({ customRoutes }) {
   const rules = Object.keys(customRoutes)
