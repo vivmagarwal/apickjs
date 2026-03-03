@@ -1,6 +1,6 @@
 {
   "name": "@apick/utils",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Error classes, env helpers, UID utilities, and object/string utils for APICK headless CMS",
   "type": "module",
   "license": "MIT",
