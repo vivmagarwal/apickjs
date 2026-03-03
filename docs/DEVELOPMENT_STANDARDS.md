@@ -251,7 +251,7 @@ See [FEATURES_GUIDE.md](./FEATURES_GUIDE.md) for data transfer details.
 Clone the repo and use the starter example:
 
 ```bash
-git clone https://github.com/APickjs/apickjs.git && cd apickjs
+git clone https://github.com/vivmagarwal/apickjs.git && cd apickjs
 npm install
 cd examples/starter
 npx tsx ../../packages/cli/src/bin.ts develop

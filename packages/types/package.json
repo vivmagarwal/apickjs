@@ -1,7 +1,11 @@
 {
   "name": "@apick/types",
   "version": "0.1.0",
+  "description": "Shared TypeScript type definitions for APICK headless CMS",
   "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/vivmagarwal/apickjs/tree/main/packages/types",
+  "repository": { "type": "git", "url": "git+https://github.com/vivmagarwal/apickjs.git", "directory": "packages/types" },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

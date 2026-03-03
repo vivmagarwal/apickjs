@@ -1,7 +1,11 @@
 {
   "name": "@apick/cli",
   "version": "0.1.0",
+  "description": "CLI tool for APICK headless CMS — develop, build, start, migrate",
   "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/vivmagarwal/apickjs/tree/main/packages/cli",
+  "repository": { "type": "git", "url": "git+https://github.com/vivmagarwal/apickjs.git", "directory": "packages/cli" },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": { "apick": "./dist/bin.js" },

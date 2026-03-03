@@ -5,9 +5,9 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/apickjs"><img src="https://img.shields.io/npm/v/apickjs.svg" alt="npm version"></a>
-  <a href="https://github.com/vivmagarwal/apickjs/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/apickjs.svg" alt="license"></a>
-  <a href="https://nodejs.org"><img src="https://img.shields.io/node/v/apickjs.svg" alt="node version"></a>
+  <a href="https://www.npmjs.com/package/@apick/core"><img src="https://img.shields.io/npm/v/@apick/core.svg" alt="npm version"></a>
+  <a href="https://github.com/vivmagarwal/apickjs/blob/main/LICENSE"><img src="https://img.shields.io/github/license/vivmagarwal/apickjs.svg" alt="license"></a>
+  <a href="https://nodejs.org"><img src="https://img.shields.io/node/v/@apick/core.svg" alt="node version"></a>
 </p>
 
 ---
@@ -291,6 +291,17 @@ NODE_ENV=production apick start
 
 Works with Docker, PM2, Kubernetes, or any Node.js hosting. See the [Deployment Guide](./docs/DEPLOYMENT_GUIDE.md).
 
+## Packages
+
+APICK is published as scoped packages on npm:
+
+| Package | Description | npm |
+|---------|-------------|-----|
+| [`@apick/core`](./packages/core) | Framework kernel: HTTP server, config, lifecycle, registries, document service, database, auth, event hub, cache | [![npm](https://img.shields.io/npm/v/@apick/core.svg)](https://www.npmjs.com/package/@apick/core) |
+| [`@apick/cli`](./packages/cli) | CLI tool: `apick develop`, `apick start`, `apick build` | [![npm](https://img.shields.io/npm/v/@apick/cli.svg)](https://www.npmjs.com/package/@apick/cli) |
+| [`@apick/types`](./packages/types) | Shared TypeScript type definitions | [![npm](https://img.shields.io/npm/v/@apick/types.svg)](https://www.npmjs.com/package/@apick/types) |
+| [`@apick/utils`](./packages/utils) | Error classes, env helpers, UID utilities, object/string utils | [![npm](https://img.shields.io/npm/v/@apick/utils.svg)](https://www.npmjs.com/package/@apick/utils) |
+
 ## Documentation
 
 | Guide | What it covers |
@@ -313,7 +324,7 @@ Works with Docker, PM2, Kubernetes, or any Node.js hosting. See the [Deployment 
 ```bash
 git clone https://github.com/vivmagarwal/apickjs.git && cd apickjs
 npm install
-npx nx run-many --target=test   # 1,352 tests
+npx vitest run --exclude "**/strapi-develop/**"   # 1,308 tests
 ```
 
 ## License

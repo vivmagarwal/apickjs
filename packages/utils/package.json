@@ -1,7 +1,11 @@
 {
   "name": "@apick/utils",
   "version": "0.1.0",
+  "description": "Error classes, env helpers, UID utilities, and object/string utils for APICK headless CMS",
   "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/vivmagarwal/apickjs/tree/main/packages/utils",
+  "repository": { "type": "git", "url": "git+https://github.com/vivmagarwal/apickjs.git", "directory": "packages/utils" },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

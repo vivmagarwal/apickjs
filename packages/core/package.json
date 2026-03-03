@@ -1,7 +1,11 @@
 {
   "name": "@apick/core",
   "version": "0.1.0",
+  "description": "Framework kernel for APICK — a pure headless CMS built TypeScript-first with no admin UI",
   "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/vivmagarwal/apickjs/tree/main/packages/core",
+  "repository": { "type": "git", "url": "git+https://github.com/vivmagarwal/apickjs.git", "directory": "packages/core" },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

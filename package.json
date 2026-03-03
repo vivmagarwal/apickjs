@@ -1,6 +1,7 @@
 {
   "name": "apickjs",
   "version": "2.0.2",
+  "private": true,
   "description": "APICK - API Construction Kit. Pure headless CMS built TypeScript-first with no admin UI.",
   "type": "module",
   "workspaces": [
