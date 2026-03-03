@@ -1,6 +1,6 @@
 {
   "name": "@apick/core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Framework kernel for APICK — a pure headless CMS built TypeScript-first with no admin UI",
   "type": "module",
   "license": "MIT",
@@ -23,8 +23,8 @@
     "test:unit": "vitest run"
   },
   "dependencies": {
-    "@apick/types": "0.2.0",
-    "@apick/utils": "0.2.0",
+    "@apick/types": "0.3.0",
+    "@apick/utils": "0.3.0",
     "find-my-way": "^9.2.0",
     "pino": "^9.6.0",
     "pino-http": "^10.4.0",
