@@ -14,7 +14,7 @@
 
 Most headless CMS tools give you a UI you'll eventually outgrow, a GraphQL layer you didn't ask for, or a plugin system that fights your architecture. APICK gives you none of that. What it gives you is a **TypeScript-native framework for building content APIs** — with every feature accessible via REST, every schema validated by Zod, and every query type-safe end to end.
 
-Define a content type. Get a full CRUD API. Add auth, i18n, draft/publish, vector search, review workflows — all through the same consistent patterns. No code generation. No magic. Just functions, middleware, and configuration.
+Define a content type. Get a full CRUD API. Add auth, middleware, draft/publish, caching, event hooks — all through the same consistent patterns. No code generation. No magic. Just functions, middleware, and configuration.
 
 ## Why APICK
 
@@ -24,11 +24,34 @@ Define a content type. Get a full CRUD API. Add auth, i18n, draft/publish, vecto
 
 - You want **real TypeScript**, not types bolted on after the fact. Every API, every config object, every query result is typed. `strict: true` everywhere. Zod schemas generate both runtime validation and static types from the same source.
 
-- You want to **own the API contract**. No proprietary query languages. No framework-specific abstractions leaking into your frontend. Standard REST with filtering, sorting, pagination, population — all documented, all predictable.
+- You want to **own the API contract**. No proprietary query languages. No framework-specific abstractions leaking into your frontend. Standard REST with filtering, sorting, pagination — all documented, all predictable.
 
-- You want **AI-native content management**. Vector fields, semantic search, RAG pipelines, content enrichment, prompt registries, MCP server integration — built into the core, not afterthought plugins.
+## Install
+
+```bash
+npm install @apick/core @apick/cli @apick/types @apick/utils
+```
+
+Or work from the monorepo source:
+
+```bash
+git clone https://github.com/vivmagarwal/apickjs.git && cd apickjs
+npm install
+```
 
 ## Quick Start
+
+### Option A: From npm (standalone project)
+
+```bash
+mkdir my-app && cd my-app
+npm init -y
+npm install @apick/core @apick/cli @apick/types
+```
+
+Create a content type, config files, and start the server. See [Tutorial 01](./tutorials/01-hello-apick/) for the full walkthrough.
+
+### Option B: From the monorepo
 
 ```bash
 git clone https://github.com/vivmagarwal/apickjs.git && cd apickjs
@@ -72,9 +95,8 @@ export default {
   attributes: {
     title:    { type: 'string', required: true },
     slug:     { type: 'uid', targetField: 'title' },
-    content:  { type: 'blocks' },
+    content:  { type: 'richtext' },
     category: { type: 'enumeration', enum: ['news', 'tutorial', 'opinion'] },
-    author:   { type: 'relation', relation: 'manyToOne', target: 'plugin::users-permissions.user' },
   },
 };
 ```
@@ -86,12 +108,11 @@ That's it. APICK auto-generates the database table, CRUD endpoints, query valida
 ```bash
 # Create
 curl -X POST http://localhost:1337/api/articles \
-  -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{ "data": { "title": "Hello World", "category": "tutorial" } }'
 
-# Query with filters, sorting, pagination, and relation population
-curl "http://localhost:1337/api/articles?filters[category][\$eq]=tutorial&sort=createdAt:desc&pagination[pageSize]=10&populate=author"
+# Query with filters, sorting, and pagination
+curl "http://localhost:1337/api/articles?filters[category][\$eq]=tutorial&sort=created_at:desc&pagination[pageSize]=10"
 
 # Publish a draft
 curl -X POST "http://localhost:1337/api/articles/DOCUMENT_ID/publish"
@@ -116,84 +137,38 @@ curl -X POST "http://localhost:1337/api/articles/DOCUMENT_ID/publish"
 ## Features
 
 ### Content Management
-- **14+ field types** — string, text, richtext, blocks, integer, float, decimal, boolean, date, datetime, time, email, password, uid, enumeration, json, media, relation, component, dynamic zone
+- **20+ field types** — string, text, richtext, blocks, integer, biginteger, float, decimal, boolean, date, datetime, time, email, password, uid, enumeration, json, media, relation, component, dynamic zone, customField
 - **Draft & Publish** — Every document has draft and published versions. Publish when ready, unpublish to retract.
-- **Relations** — oneToOne, oneToMany, manyToOne, manyToMany, with bidirectional inverse configuration
-- **Components & Dynamic Zones** — Reusable field groups and flexible content blocks
-- **Content History** — Point-in-time snapshots with schema-aware restore
+- **Single Types & Collection Types** — One-off settings pages or lists of entries, both from the same schema system.
 
 ### Query Engine
-- **35+ filter operators** — `$eq`, `$ne`, `$in`, `$contains`, `$between`, `$null`, `$not`, and more
-- **Deep filtering** — Filter on nested relations: `filters[author][role][name][$eq]=editor`
+- **19 filter operators** — `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$notIn`, `$contains`, `$containsi`, `$notContains`, `$startsWith`, `$endsWith`, `$null`, `$notNull`, `$between`, `$and`, `$or`, `$not`
 - **Field selection** — `fields=title,slug` to reduce payload size
-- **Nested population** — `populate[author][fields]=name,email`
-- **Cursor & offset pagination** — Choose your pagination strategy
+- **Sorting** — `sort=created_at:desc` or multi-field sorting
+- **Pagination** — Page-based (`page`, `pageSize`) or offset-based (`start`, `limit`)
 
 ### Authentication & Authorization
-- **Dual auth system** — Separate admin and end-user authentication
-- **JWT with refresh tokens** — Access/refresh token rotation with reuse detection
-- **CASL-powered RBAC** — Field-level and row-level permissions
-- **API tokens** — Read-only, full-access, or custom-scoped tokens for machine clients
-- **Rate limiting** — Per-IP, per-user, or per-route with Redis support
+- **JWT authentication** — `signJWT` / `verifyJWT` utilities with configurable secrets and expiry
+- **RBAC permission engine** — Field-level and condition-based permissions with MongoDB-style operators
+- **API tokens** — HMAC-hashed tokens for machine clients
+- **Rate limiting** — Per-IP, configurable windows and max requests
 
-### Internationalization
-- **Per-field localization** — Choose which fields are translated, which are shared
-- **Independent publish per locale** — Published in English, still draft in French
-- **Locale management API** — Add/remove locales at runtime
+### Middleware & Extensibility
+- **Onion model middleware** — `(ctx, next) => { ... await next() ... }` with full before/after control
+- **Policies** — Boolean gate functions for route-level access control
+- **Custom controllers & services** — Extend or replace default CRUD via factory functions
+- **Lifecycle hooks** — `beforeCreate`, `afterCreate`, `beforeUpdate`, `afterUpdate`, etc.
+- **Event hub** — Pub/sub event system with `on()`, `subscribe()`, `emit()`, `once()`
 
-### AI (Built-in)
-- **Vector fields** — Auto-computed embeddings via lifecycle hooks
-- **Semantic search** — Keyword, vector similarity, or hybrid search with Reciprocal Rank Fusion
-- **Content enrichment** — Auto-generate summaries, tags, SEO descriptions, alt text, sentiment scores
-- **Prompt registry** — Versioned prompt templates with draft/publish workflow
-- **Structured output** — Generate typed content from LLMs, validated against your Zod schemas
-- **RAG pipeline** — Auto-chunk, embed, retrieve, and answer questions grounded in your content
-- **MCP server** — Expose your content to Claude, Cursor, and other AI agents via Model Context Protocol
-- **AI gateway** — Proxy AI calls with semantic caching, per-user rate limiting, cost tracking, and fallback chains
+### Caching
+- **In-memory LRU cache** — TTL support, prefix-based invalidation, configurable max size
 
-### Operations
-- **Review workflows** — Multi-stage editorial approval with publish gates
-- **Content releases** — Batch publish/unpublish across content types and locales atomically
-- **Data transfer** — Export/import archives or direct instance-to-instance sync
-- **Audit logs** — Track every admin action for compliance
-- **Webhooks** — HMAC-signed event delivery to external systems
-- **Cron jobs** — In-process scheduled tasks
+### Logging
+- **Pino structured logging** — JSON output, child loggers per module, configurable levels
 
-## Architecture
-
-APICK is a monorepo of 20 focused packages:
-
-| Package | What it does |
-|---------|-------------|
-| `@apick/core` | HTTP server, config, lifecycle, registries, middleware, policies, factories, document service, query engine, database, auth, cache, logging, events, cron, queue, webhooks |
-| `@apick/admin` | Admin users, roles, API tokens, audit logs |
-| `@apick/content-manager` | Content CRUD orchestration, history/versioning |
-| `@apick/users-permissions` | End-user auth, registration, OAuth |
-| `@apick/permissions` | CASL-based RBAC engine |
-| `@apick/i18n` | Multi-locale content management |
-| `@apick/upload` | File/media management with provider support |
-| `@apick/email` | Provider-based transactional email |
-| `@apick/ai` | Vector search, enrichment, generation, RAG, prompts |
-| `@apick/mcp-server` | Model Context Protocol server |
-| `@apick/ai-gateway` | AI proxy with caching, rate limiting, cost tracking |
-| `@apick/content-releases` | Batch publish/unpublish releases |
-| `@apick/review-workflows` | Editorial approval stages |
-| `@apick/data-transfer` | Export/import/sync |
-| `@apick/generators` | Code scaffolding CLI |
-| `@apick/cli` | Command-line interface |
-| `@apick/types` | Shared TypeScript definitions |
-| `@apick/utils` | Errors, env helpers, validation, UID utilities |
-
-**Providers** (swappable):
-
-| Provider | Package |
-|----------|---------|
-| OpenAI | `@apick/provider-ai-openai` |
-| Anthropic | `@apick/provider-ai-anthropic` |
-| Google AI | `@apick/provider-ai-google` |
-| Ollama | `@apick/provider-ai-ollama` |
-| Resend (email) | `@apick/provider-email-resend` |
-| Cloudflare R2 (upload) | `@apick/provider-upload-r2` |
+### Webhooks & Cron
+- **Webhooks** — HMAC-SHA256 signed event delivery to external URLs
+- **Cron jobs** — In-process scheduled tasks with cron syntax
 
 ## Tech Stack
 
@@ -202,9 +177,9 @@ APICK is a monorepo of 20 focused packages:
 | **Language** | TypeScript (strict, ESM) | End-to-end type safety |
 | **Runtime** | Node.js >= 20 | LTS, native ESM, AsyncLocalStorage |
 | **HTTP** | `node:http` + `find-my-way` | Zero framework overhead, trie-based routing |
-| **Database** | Drizzle ORM | TypeScript-first, SQL-like API, zero runtime cost |
+| **Database** | Drizzle ORM + SQLite | TypeScript-first, zero runtime cost |
 | **Validation** | Zod | Runtime validation = static types, single source of truth |
-| **Auth** | JWT + CASL | Stateless tokens, fine-grained attribute-level RBAC |
+| **Auth** | JWT + custom RBAC | Stateless tokens, condition-based permissions |
 | **Logging** | Pino | Structured JSON, 30x faster than Winston |
 | **Testing** | Vitest + `server.inject()` | Fast, no network overhead, full middleware coverage |
 
@@ -238,19 +213,12 @@ export default (policyContext, config, { apick }) => {
 };
 ```
 
-**Lifecycle hooks** — react to data changes:
+**Event hooks** — react to data changes:
 ```typescript
-export default {
-  beforeCreate(event) {
-    event.params.data.slug = slugify(event.params.data.title);
-  },
-  afterCreate(event) {
-    apick.service('plugin::email.email').send({
-      to: 'editors@example.com',
-      subject: `New article: ${event.result.title}`,
-    });
-  },
-};
+// In register() lifecycle
+apick.eventHub.on('entry.create', ({ result, params }) => {
+  apick.log.info(`Created ${params.uid}: ${result.document_id}`);
+});
 ```
 
 ## Testing
@@ -281,16 +249,6 @@ describe('Articles API', () => {
 
 No mocking HTTP. No spinning up servers. `server.inject()` sends requests through the full middleware stack without touching the network.
 
-## Deploy
-
-```bash
-NODE_ENV=production apick build
-NODE_ENV=production apick migration:run
-NODE_ENV=production apick start
-```
-
-Works with Docker, PM2, Kubernetes, or any Node.js hosting. See the [Deployment Guide](./docs/DEPLOYMENT_GUIDE.md).
-
 ## Packages
 
 APICK is published as scoped packages on npm:
@@ -298,9 +256,45 @@ APICK is published as scoped packages on npm:
 | Package | Description | npm |
 |---------|-------------|-----|
 | [`@apick/core`](./packages/core) | Framework kernel: HTTP server, config, lifecycle, registries, document service, database, auth, event hub, cache | [![npm](https://img.shields.io/npm/v/@apick/core.svg)](https://www.npmjs.com/package/@apick/core) |
-| [`@apick/cli`](./packages/cli) | CLI tool: `apick develop`, `apick start`, `apick build` | [![npm](https://img.shields.io/npm/v/@apick/cli.svg)](https://www.npmjs.com/package/@apick/cli) |
+| [`@apick/cli`](./packages/cli) | CLI tool: `apick develop`, `apick start` | [![npm](https://img.shields.io/npm/v/@apick/cli.svg)](https://www.npmjs.com/package/@apick/cli) |
 | [`@apick/types`](./packages/types) | Shared TypeScript type definitions | [![npm](https://img.shields.io/npm/v/@apick/types.svg)](https://www.npmjs.com/package/@apick/types) |
 | [`@apick/utils`](./packages/utils) | Error classes, env helpers, UID utilities, object/string utils | [![npm](https://img.shields.io/npm/v/@apick/utils.svg)](https://www.npmjs.com/package/@apick/utils) |
+
+Additional packages in the monorepo (not yet published to npm):
+
+| Package | What it does |
+|---------|-------------|
+| `@apick/admin` | Admin users, roles, API tokens, audit logs |
+| `@apick/permissions` | Condition-based RBAC engine |
+| `@apick/users-permissions` | End-user auth, registration |
+| `@apick/content-manager` | Content CRUD orchestration, history/versioning |
+| `@apick/i18n` | Multi-locale content management |
+| `@apick/upload` | File/media management with provider support |
+| `@apick/email` | Provider-based transactional email |
+| `@apick/ai` | Vector search, enrichment, generation, RAG, prompts |
+| `@apick/mcp-server` | Model Context Protocol server |
+| `@apick/ai-gateway` | AI proxy with caching, rate limiting, cost tracking |
+| `@apick/content-releases` | Batch publish/unpublish releases |
+| `@apick/review-workflows` | Editorial approval stages |
+| `@apick/data-transfer` | Export/import/sync |
+| `@apick/generators` | Code scaffolding CLI |
+
+## Tutorials
+
+Progressive tutorial series — each builds on the previous, with working code and automated tests:
+
+| # | Tutorial | What you learn |
+|---|----------|---------------|
+| 01 | [Hello APIck](./tutorials/01-hello-apick/) | Your first content API — define a schema, get full CRUD |
+| 02 | [Field Types & Querying](./tutorials/02-field-types-and-querying/) | 8+ field types, sort, pagination, field selection |
+| 03 | [Draft & Publish](./tutorials/03-draft-and-publish/) | Draft/publish lifecycle, status filtering |
+| 04 | [Single Types](./tutorials/04-single-types/) | One-off settings alongside collection types |
+| 05 | [Middleware](./tutorials/05-middleware/) | Onion model, response timing, API key guard |
+| 06 | [Authentication](./tutorials/06-authentication/) | JWT-protected endpoints with signJWT/verifyJWT |
+| 07 | [Custom Controllers](./tutorials/07-custom-controllers/) | Extending core CRUD with custom actions |
+| 08 | [Lifecycle Hooks](./tutorials/08-lifecycle-hooks/) | Auto-slug generation, event-driven side effects |
+| 09 | [Caching](./tutorials/09-caching/) | In-memory cache, TTL, invalidation on write |
+| 10 | [Testing](./tutorials/10-testing/) | Full test suite with server.inject() |
 
 ## Documentation
 

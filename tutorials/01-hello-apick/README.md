@@ -24,17 +24,28 @@ APIck auto-generates five REST endpoints from this single definition:
 ## Prerequisites
 
 - Node.js 20 or later
-- git
 
-## Step 1: Clone the Repo and Install Dependencies
+## Step 1: Set Up the Project
+
+### Option A: From the monorepo (recommended for tutorials)
 
 ```bash
-git clone https://github.com/anthropics/apick_js.git
-cd apick_js
+git clone https://github.com/vivmagarwal/apickjs.git
+cd apickjs
 npm install
 ```
 
 The monorepo uses npm workspaces. A single `npm install` at the root fetches everything, including this tutorial's dev dependencies.
+
+### Option B: From npm (standalone project)
+
+```bash
+mkdir my-apick-app && cd my-apick-app
+npm init -y
+npm install @apick/core @apick/cli @apick/types
+```
+
+Then create the directory structure shown in Step 2 and Step 3 below.
 
 ## Step 2: Define the Post Content Type
 

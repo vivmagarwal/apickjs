@@ -2,8 +2,18 @@
 
 ## Setup
 
+### From npm (standalone project)
+
 ```bash
-git clone <repo-url> && cd apick_js
+mkdir my-app && cd my-app
+npm init -y
+npm install @apick/core @apick/cli @apick/types @apick/utils
+```
+
+### From the monorepo (for contributing or running tutorials)
+
+```bash
+git clone https://github.com/vivmagarwal/apickjs.git && cd apickjs
 npm install        # npm workspaces resolve all inter-package deps
 npx vitest run   # Run all tests
 ```
@@ -248,7 +258,17 @@ See [FEATURES_GUIDE.md](./FEATURES_GUIDE.md) for data transfer details.
 
 ### Project Creation
 
-Clone the repo and use the starter example:
+**From npm:**
+
+```bash
+mkdir my-app && cd my-app
+npm init -y
+npm install @apick/core @apick/cli @apick/types
+```
+
+Then create your content types in `src/api/`, config files in `config/`, and start with `npx apick develop`.
+
+**From the monorepo:**
 
 ```bash
 git clone https://github.com/vivmagarwal/apickjs.git && cd apickjs
