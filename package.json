@@ -4,7 +4,8 @@
   "description": "APICK - API Construction Kit. Pure headless CMS built TypeScript-first with no admin UI.",
   "type": "module",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "tutorials/*"
   ],
   "engines": {
     "node": ">=20.0.0"

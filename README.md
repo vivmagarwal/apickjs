@@ -31,28 +31,29 @@ Define a content type. Get a full CRUD API. Add auth, i18n, draft/publish, vecto
 ## Quick Start
 
 ```bash
-npx create-apick-app my-project
-cd my-project
-npm run develop
+git clone https://github.com/vivmagarwal/apickjs.git && cd apickjs
+npm install
+cd examples/starter
+cp .env.example .env      # uses SQLite by default
+npx tsx ../../packages/cli/src/bin.ts develop
 ```
 
-Your API is live at `http://localhost:1337`. Create your first admin:
+Your API is live at `http://localhost:1337`. Try it out:
 
 ```bash
-curl -X POST http://localhost:1337/admin/register-admin \
+# Create an article
+curl -X POST http://localhost:1337/api/articles \
   -H "Content-Type: application/json" \
-  -d '{
-    "email": "admin@example.com",
-    "firstname": "Admin",
-    "lastname": "User",
-    "password": "Admin1234!"
-  }'
+  -d '{ "data": { "title": "Hello World", "slug": "hello-world" } }'
+
+# List all articles
+curl http://localhost:1337/api/articles
 ```
 
 ## Define a Content Type
 
 ```typescript
-// src/api/article/content-types/article/schema.ts
+// src/api/article/content-type.ts
 export default {
   kind: 'collectionType',
   collectionName: 'articles',

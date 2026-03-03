@@ -7,6 +7,7 @@
  */
 
 import path from 'node:path';
+import fs from 'node:fs';
 import type {
   Apick as ApickInterface,
   ConfigAccessor,
@@ -37,6 +38,7 @@ import { createLifecycleRegistry } from '../database/lifecycles/index.js';
 import { normalizeContentType } from '../content-types/index.js';
 import type { ContentTypeSchema } from '../content-types/index.js';
 import { createDocumentServiceManager, type DocumentServiceManager } from '../document-service/index.js';
+import { registerContentApi } from '../content-api/index.js';
 
 export interface ApickOptions {
   appDir: string;
@@ -214,6 +216,9 @@ export class Apick implements ApickInterface {
     const proxyEnabled = this.config.get('server.proxy.enabled', false);
     this.server = createServer({ logger: this.log, proxyEnabled });
 
+    // 4b. Discover content types from src/api/*/content-type.{ts,js}
+    await this.discoverContentTypes();
+
     // 5. register() phase — DB NOT available
     //    Load plugins, user register function, etc.
     await this.runRegisterPhase();
@@ -232,6 +237,9 @@ export class Apick implements ApickInterface {
 
     // 10. bootstrap() phase — DB available
     await this.runBootstrapPhase();
+
+    // 11. Auto-register REST routes for all content types
+    registerContentApi(this);
 
     this.isLoaded = true;
     this.log.info('Apick loaded successfully');
@@ -377,6 +385,55 @@ export class Apick implements ApickInterface {
       const tableName = schema.collectionName || schema.info?.pluralName || uid.split('.').pop();
       return createQueryEngine(rawDb, tableName, log);
     };
+  }
+
+  private async discoverContentTypes(): Promise<void> {
+    const apiDir = path.join(this.dirs.app.src, 'api');
+
+    if (!fs.existsSync(apiDir)) {
+      this.log.debug('No src/api/ directory found — skipping content type discovery');
+      return;
+    }
+
+    let entries: fs.Dirent[];
+    try {
+      entries = fs.readdirSync(apiDir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+
+      const dirName = entry.name;
+      let contentTypeConfig: any = null;
+
+      // Try content-type.ts, then content-type.js
+      for (const ext of ['.ts', '.js']) {
+        const filePath = path.join(apiDir, dirName, `content-type${ext}`);
+        if (fs.existsSync(filePath)) {
+          try {
+            const mod = await import(filePath);
+            contentTypeConfig = mod.default ?? mod;
+            break;
+          } catch (err) {
+            this.log.warn({ err, filePath }, 'Failed to load content-type file');
+          }
+        }
+      }
+
+      if (!contentTypeConfig) continue;
+
+      const singularName = contentTypeConfig.info?.singularName || dirName;
+      const uid = `api::${singularName}.${singularName}`;
+
+      // Only register if not already registered (user register() can override)
+      if (!this.contentTypes.has(uid)) {
+        const normalized = normalizeContentType(uid, contentTypeConfig);
+        this.contentTypes.add(uid, normalized);
+        this.log.debug({ uid }, 'Discovered content type');
+      }
+    }
   }
 
   private async runDestroyPhase(): Promise<void> {

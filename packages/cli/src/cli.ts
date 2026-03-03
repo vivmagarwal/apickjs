@@ -206,11 +206,16 @@ export const developCommand: CliCommand = {
     { name: 'debug', description: 'Enable debug mode', type: 'boolean', default: false },
     { name: 'watch-admin', description: 'Watch admin panel', type: 'boolean', default: false },
   ],
-  action: async (args) => {
-    const port = args.flags.port || args.flags.p || 1337;
-    const host = args.flags.host || args.flags.H || '0.0.0.0';
-    console.log(`Starting APICK development server on ${host}:${port}...`);
-    // In a real implementation, this would boot the APICK server
+  action: async (_args, ctx) => {
+    try {
+      const { Apick } = await import('@apick/core');
+      const apick = new Apick({ appDir: ctx.cwd });
+      await apick.load();
+      await apick.listen();
+    } catch (err: any) {
+      console.error('Failed to start development server:', err.message || err);
+      process.exit(1);
+    }
   },
 };
 
@@ -221,10 +226,17 @@ export const startCommand: CliCommand = {
     { name: 'port', alias: 'p', description: 'Port to listen on', type: 'number', default: 1337 },
     { name: 'host', alias: 'H', description: 'Host to bind to', type: 'string', default: '0.0.0.0' },
   ],
-  action: async (args) => {
-    const port = args.flags.port || args.flags.p || 1337;
-    const host = args.flags.host || args.flags.H || '0.0.0.0';
-    console.log(`Starting APICK production server on ${host}:${port}...`);
+  action: async (_args, ctx) => {
+    try {
+      process.env.NODE_ENV = 'production';
+      const { Apick } = await import('@apick/core');
+      const apick = new Apick({ appDir: ctx.cwd });
+      await apick.load();
+      await apick.listen();
+    } catch (err: any) {
+      console.error('Failed to start production server:', err.message || err);
+      process.exit(1);
+    }
   },
 };
 

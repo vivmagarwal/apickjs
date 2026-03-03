@@ -10,3 +10,4 @@ coverage/
 .nx/
 *.tsbuildinfo
 .project-management/
+.playground/
