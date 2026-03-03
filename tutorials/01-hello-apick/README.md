@@ -282,6 +282,17 @@ All responses follow a consistent envelope:
 - **List**: `{ "data": [ ... ], "meta": { "pagination": { ... } } }`
 - **Error**: `{ "data": null, "error": { "status": 404, "name": "NotFoundError", "message": "..." } }`
 
+## Documentation References
+
+The concepts in this tutorial are covered in more detail in these guides:
+
+- [Content Modeling Guide](../../docs/CONTENT_MODELING_GUIDE.md) -- content type schemas, field types, system fields (`document_id`, `created_at`, etc.)
+- [Content API Guide](../../docs/CONTENT_API_GUIDE.md) -- auto-generated REST endpoints, request/response format, error envelope
+- [Architecture](../../docs/ARCHITECTURE.md) -- project structure, startup lifecycle, UID namespace system
+- [Development Standards](../../docs/DEVELOPMENT_STANDARDS.md) -- TypeScript conventions, file organization, config files
+
+---
+
 ## Running the Tests
 
 From the repository root:

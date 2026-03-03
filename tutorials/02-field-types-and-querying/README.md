@@ -193,6 +193,16 @@ Sort and pagination compose naturally:
 curl "http://localhost:1337/api/articles?sort=views:desc&page=1&pageSize=3"
 ```
 
+## Documentation References
+
+The concepts in this tutorial are covered in more detail in these guides:
+
+- [Content Modeling Guide](../../docs/CONTENT_MODELING_GUIDE.md) -- all 17 scalar field types, common attribute options (`required`, `unique`, `default`, `private`), Zod schema auto-generation
+- [Content API Guide](../../docs/CONTENT_API_GUIDE.md) -- sorting, pagination (page-based and offset-based), field selection, filtering operators
+- [Database Guide](../../docs/DATABASE_GUIDE.md) -- Document Service methods, Query Engine operators (`$eq`, `$gt`, `$contains`, etc.)
+
+---
+
 ## Running Tests
 
 From this tutorial directory:

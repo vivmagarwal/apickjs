@@ -221,6 +221,15 @@ If test isolation is broken, Test B would see the article from Test A. The in-me
 
 ---
 
+## Documentation References
+
+The concepts in this tutorial are covered in more detail in these guides:
+
+- [Testing Guide](../../docs/TESTING_GUIDE.md) -- testing philosophy, `server.inject()` patterns, database test patterns, authentication testing, CI/CD integration
+- [Development Standards](../../docs/DEVELOPMENT_STANDARDS.md) -- testing conventions, Vitest configuration, three test levels (unit, service, HTTP integration)
+
+---
+
 ## Running the Tests
 
 ```bash

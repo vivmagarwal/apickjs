@@ -225,7 +225,7 @@ describe('createCoreService', () => {
 
     const result = await service.delete('doc-1');
     expect(result).not.toBeNull();
-    expect(result.documentId).toBe('doc-1');
+    expect(result.document_id).toBe('doc-1');
   });
 
   it('accepts customizer overrides', async () => {

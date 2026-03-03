@@ -248,11 +248,14 @@ See [FEATURES_GUIDE.md](./FEATURES_GUIDE.md) for data transfer details.
 
 ### Project Creation
 
-```bash
-npx create-apick-app my-project
-```
+Clone the repo and use the starter example:
 
-Prompts for template (`quickstart`/`empty`), database (`sqlite`/`postgres`/`mysql`), package manager, and TypeScript.
+```bash
+git clone https://github.com/APickjs/apickjs.git && cd apickjs
+npm install
+cd examples/starter
+npx tsx ../../packages/cli/src/bin.ts develop
+```
 
 ## Testing
 

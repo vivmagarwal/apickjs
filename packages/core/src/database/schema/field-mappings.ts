@@ -91,6 +91,9 @@ export function fieldToSqliteColumn(
 
 /**
  * System fields added to every content type table.
+ *
+ * These correspond to the SYSTEM_ATTRIBUTES injected by normalizeContentType().
+ * The column names use snake_case; the attribute names use camelCase.
  */
 export function getSystemColumns(): string[] {
   return [
@@ -105,3 +108,17 @@ export function getSystemColumns(): string[] {
     '"locale" VARCHAR(10)',
   ];
 }
+
+/**
+ * Attribute names that are handled by getSystemColumns() and should
+ * NOT be emitted again during CREATE TABLE from the attributes map.
+ */
+export const SYSTEM_ATTRIBUTE_NAMES = new Set([
+  'createdAt',
+  'updatedAt',
+  'publishedAt',
+  'firstPublishedAt',
+  'createdBy',
+  'updatedBy',
+  'locale',
+]);

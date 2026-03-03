@@ -48,10 +48,12 @@ For a content type with `pluralName: 'articles'`:
 | Method | Path | Action | Description |
 |--------|------|--------|-------------|
 | `GET` | `/api/articles` | `find` | List entries with filtering, sorting, pagination |
-| `GET` | `/api/articles/:documentId` | `findOne` | Get single entry by document ID |
+| `GET` | `/api/articles/:id` | `findOne` | Get single entry by document ID |
 | `POST` | `/api/articles` | `create` | Create new entry |
-| `PUT` | `/api/articles/:documentId` | `update` | Update existing entry |
-| `DELETE` | `/api/articles/:documentId` | `delete` | Delete entry |
+| `PUT` | `/api/articles/:id` | `update` | Update existing entry |
+| `DELETE` | `/api/articles/:id` | `delete` | Delete entry |
+| `POST` | `/api/articles/:id/publish` | `publish` | Publish entry |
+| `POST` | `/api/articles/:id/unpublish` | `unpublish` | Unpublish entry |
 
 ### Single Types
 
@@ -121,13 +123,13 @@ curl -X DELETE http://localhost:1337/api/articles/abc123def456 \
 {
   "data": {
     "id": 1,
-    "documentId": "abc123def456",
+    "document_id": "abc123def456",
     "title": "Getting Started with APICK",
     "slug": "getting-started-with-apick",
     "content": "APICK is a pure headless CMS...",
-    "createdAt": "2026-01-15T10:30:00.000Z",
-    "updatedAt": "2026-01-15T10:30:00.000Z",
-    "publishedAt": "2026-01-15T10:30:00.000Z",
+    "created_at": "2026-01-15T10:30:00.000Z",
+    "updated_at": "2026-01-15T10:30:00.000Z",
+    "published_at": "2026-01-15T10:30:00.000Z",
     "locale": "en"
   },
   "meta": {}
@@ -150,7 +152,7 @@ curl -X DELETE http://localhost:1337/api/articles/abc123def456 \
 }
 ```
 
-> **Flat response format.** APICK does not wrap fields inside a nested `attributes` object. All fields sit directly on the data object alongside `id`, `documentId`, and timestamps.
+> **Flat response format.** APICK does not wrap fields inside a nested `attributes` object. All fields sit directly on the data object alongside `id`, `document_id`, and timestamps.
 
 ### Error Response
 
@@ -175,7 +177,7 @@ curl -X DELETE http://localhost:1337/api/articles/abc123def456 \
 | `400` | `ValidationError` | Invalid request body, query params, or field values |
 | `401` | `UnauthorizedError` | Missing or invalid authentication token |
 | `403` | `ForbiddenError` | Authenticated but lacking required permissions |
-| `404` | `NotFoundError` | Entry with given `documentId` does not exist |
+| `404` | `NotFoundError` | Entry with given `document_id` does not exist |
 | `409` | `ConflictError` | Unique constraint violation |
 | `500` | `InternalServerError` | Unhandled server error |
 
@@ -281,7 +283,7 @@ export default {
 curl "http://localhost:1337/api/articles?fields[0]=title&fields[1]=slug&fields[2]=publishedAt"
 ```
 
-> `id` and `documentId` are always included regardless of `fields` selection.
+> `id` and `document_id` are always included regardless of `fields` selection.
 
 ### Population
 
@@ -399,10 +401,9 @@ await apick.documents('api::article.article').discardDraft({
   locale: 'en',
 });
 
-// Publish all locales at once
+// Publish (locale is optional — omit to publish default locale)
 await apick.documents('api::article.article').publish({
   documentId: 'abc123',
-  locale: '*',
 });
 ```
 
@@ -517,9 +518,9 @@ Webhook payload example:
   "uid": "api::article.article",
   "entry": {
     "id": 42,
-    "documentId": "abc123def456",
+    "document_id": "abc123def456",
     "title": "Published Article",
-    "publishedAt": "2026-03-02T10:30:00.000Z"
+    "published_at": "2026-03-02T10:30:00.000Z"
   }
 }
 ```

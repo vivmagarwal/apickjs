@@ -98,21 +98,15 @@ const article = await apick.documents('api::article.article').create({
 
 // Update
 await apick.documents('api::article.article').update({
-  documentId: article.documentId,
+  documentId: article.document_id,
   data: { title: 'Updated Title' },
   locale: 'en',
 });
 
 // Publish
 await apick.documents('api::article.article').publish({
-  documentId: article.documentId,
+  documentId: article.document_id,
   locale: 'en',
-});
-
-// Publish all locales
-await apick.documents('api::article.article').publish({
-  documentId: article.documentId,
-  locale: '*',
 });
 ```
 

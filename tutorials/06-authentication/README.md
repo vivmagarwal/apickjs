@@ -158,6 +158,15 @@ curl -i -X POST http://localhost:1337/api/articles \
   -d '{ "data": { "title": "My Protected Article" } }'
 ```
 
+## Documentation References
+
+The concepts in this tutorial are covered in more detail in these guides:
+
+- [Auth Guide](../../docs/AUTH_GUIDE.md) -- JWT architecture, admin vs end-user auth, API tokens, RBAC, session management
+- [Customization Guide](../../docs/CUSTOMIZATION_GUIDE.md) -- Policies section: auth policies, route-level policy config
+
+---
+
 ## Running Tests
 
 From the repository root:

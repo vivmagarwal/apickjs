@@ -616,20 +616,20 @@ import type { Core } from '@apick/types';
 export default async ({ apick }: { apick: Core.Apick }) => {
   const auditLogger = apick.service('plugin::audit-log.audit-logger');
 
-  apick.documents.on('entry.create', async ({ result, params }) => {
-    await auditLogger.log('create', params.uid, result.documentId, params.data);
+  apick.eventHub.on('entry.create', async ({ result, params }) => {
+    await auditLogger.log('create', result.document_id, params.data);
   });
 
-  apick.documents.on('entry.update', async ({ result, params }) => {
-    await auditLogger.log('update', params.uid, result.documentId, params.data);
+  apick.eventHub.on('entry.update', async ({ result, params }) => {
+    await auditLogger.log('update', result.document_id, params.data);
   });
 
-  apick.documents.on('entry.delete', async ({ result, params }) => {
-    await auditLogger.log('delete', params.uid, result.documentId);
+  apick.eventHub.on('entry.delete', async ({ result, params }) => {
+    await auditLogger.log('delete', result.document_id);
   });
 
-  apick.documents.on('entry.publish', async ({ result, params }) => {
-    await auditLogger.log('publish', params.uid, result.documentId);
+  apick.eventHub.on('entry.publish', async ({ result, params }) => {
+    await auditLogger.log('publish', result.document_id);
   });
 };
 ```
@@ -1905,12 +1905,12 @@ flowchart TD
 
 | Event | Payload | When |
 |-------|---------|------|
-| `entry.create` | `{ uid, result }` | After creating an entry |
-| `entry.update` | `{ uid, result }` | After updating an entry |
-| `entry.delete` | `{ uid, result }` | After deleting an entry |
-| `entry.publish` | `{ uid, result }` | After publishing a draft |
-| `entry.unpublish` | `{ uid, result }` | After unpublishing to draft |
-| `entry.draft-discard` | `{ uid, result }` | After discarding draft changes |
+| `entry.create` | `{ result, params }` | After creating an entry |
+| `entry.update` | `{ result, params, previousEntry }` | After updating an entry |
+| `entry.delete` | `{ result, params }` | After deleting an entry |
+| `entry.publish` | `{ result, params }` | After publishing a draft |
+| `entry.unpublish` | `{ result, params }` | After unpublishing to draft |
+| `entry.draft-discard` | `{ result, params }` | After discarding draft changes |
 
 #### Media Events
 
@@ -1951,9 +1951,8 @@ flowchart TD
 apick.eventHub.subscribe((event, data) => {
   apick.log.info({
     event,
-    uid: data?.uid,
     entityId: data?.result?.id,
-    userId: data?.result?.updatedBy?.id,
+    documentId: data?.result?.document_id,
     timestamp: new Date().toISOString(),
   }, 'audit');
 });
@@ -1963,17 +1962,16 @@ apick.eventHub.subscribe((event, data) => {
 
 ```ts
 apick.eventHub.on('entry.publish', async (data) => {
-  if (data.uid !== 'api::article.article') return;
+  // data is { result, params }
   await searchClient.index('articles').addDocuments([{
     id: data.result.id,
     title: data.result.title,
     content: data.result.content,
-    publishedAt: data.result.publishedAt,
+    published_at: data.result.published_at,
   }]);
 });
 
 apick.eventHub.on('entry.unpublish', async (data) => {
-  if (data.uid !== 'api::article.article') return;
   await searchClient.index('articles').deleteDocument(data.result.id);
 });
 ```
@@ -1982,8 +1980,9 @@ apick.eventHub.on('entry.unpublish', async (data) => {
 
 ```ts
 apick.eventHub.on('entry.update', async (data) => {
-  await cache.invalidate(`${data.uid}:${data.result.id}`);
-  await cache.invalidate(`${data.uid}:list`);
+  // data is { result, params, previousEntry }
+  await cache.invalidate(`entry:${data.result.id}`);
+  await cache.invalidate(`entry:list`);
 });
 ```
 
@@ -2030,7 +2029,7 @@ Handlers execute **sequentially**, not in parallel. This is deliberate:
 - Predictable ordering guarantees (handler A always completes before handler B)
 - Prevents race conditions between handlers that modify the same data
 - Easier debugging -- stack traces show the exact handler that failed
-- A failing handler prevents subsequent handlers from running (fail-fast)
+- Errors are caught and logged per-handler (fail-safe) -- a failing handler does not prevent subsequent handlers from running
 
 **If you need parallel execution**, handle it inside a single handler:
 

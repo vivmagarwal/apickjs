@@ -131,10 +131,9 @@ When a content type has `i18n.localized: true` at the top level, the default for
 | Method | Endpoint | Query Params | Description |
 |--------|----------|-------------|-------------|
 | `GET` | `/api/:pluralName` | `locale=fr` | List entries in a specific locale |
-| `GET` | `/api/:pluralName/:documentId` | `locale=de` | Get single entry in a locale |
-| `GET` | `/api/:pluralName/:documentId` | `locale=*` | Get all locale versions of an entry |
+| `GET` | `/api/:pluralName/:id` | `locale=de` | Get single entry in a locale |
 | `POST` | `/api/:pluralName` | -- | Create entry (locale in body `data.locale`) |
-| `PUT` | `/api/:pluralName/:documentId` | `locale=fr` | Update entry in a specific locale |
+| `PUT` | `/api/:pluralName/:id` | `locale=fr` | Update entry in a specific locale |
 
 #### curl Examples
 
@@ -142,13 +141,6 @@ When a content type has `i18n.localized: true` at the top level, the default for
 
 ```bash
 curl -X GET "http://localhost:1337/api/articles?locale=fr" \
-  -H "Authorization: Bearer <token>"
-```
-
-**Fetch all locale versions of a document:**
-
-```bash
-curl -X GET "http://localhost:1337/api/articles/abc123?locale=*" \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -234,12 +226,6 @@ const articles = await apick.documents('api::article.article').findMany({
   locale: 'fr',
 });
 
-// Find a document across all locales
-const allLocales = await apick.documents('api::article.article').findOne({
-  documentId: 'abc123',
-  locale: '*',
-});
-
 // Delete a specific locale version
 await apick.documents('api::article.article').delete({
   documentId: 'abc123',
@@ -286,7 +272,7 @@ Each action within a release targets a specific document, locale, and operation:
 | `type` | `string` | `'publish'` or `'unpublish'` |
 | `contentType` | `string` | Content type UID (e.g., `'api::article.article'`) |
 | `documentId` | `string` | Target document identifier |
-| `locale` | `string` | Target locale (or `'*'` for all locales) |
+| `locale` | `string` | Target locale code (e.g., `'en'`, `'fr'`) |
 
 A release can mix publish and unpublish actions across different content types. For example, you might publish 5 articles and unpublish 2 old landing pages in a single release.
 
@@ -413,7 +399,7 @@ curl -X POST "http://localhost:1337/admin/content-releases/3/actions" \
         "type": "unpublish",
         "contentType": "api::page.page",
         "documentId": "def456",
-        "locale": "*"
+        "locale": "en"
       }
     ]
   }'

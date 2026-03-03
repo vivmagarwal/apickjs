@@ -225,6 +225,15 @@ This pattern is useful for passing authentication info, tenant IDs, feature flag
 | `ctx.request.headers`   | Incoming request headers (lowercase keys).             |
 | `await next()`          | Pass control to the next middleware / route handler.   |
 
+## Documentation References
+
+The concepts in this tutorial are covered in more detail in these guides:
+
+- [Customization Guide](../../docs/CUSTOMIZATION_GUIDE.md) -- Middlewares section: registration, configuration, onion model, execution order, short-circuiting
+- [Architecture](../../docs/ARCHITECTURE.md) -- Request Lifecycle, full middleware pipeline overview
+
+---
+
 ## Running Tests
 
 From this tutorial directory:

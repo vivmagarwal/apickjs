@@ -289,30 +289,20 @@ export class Apick implements ApickInterface {
   // --- Internal lifecycle phases ---
 
   private async runRegisterPhase(): Promise<void> {
-    // Load user lifecycle file: src/index.ts → register()
-    try {
-      const userLifecyclePath = path.join(this.dirs.app.src, 'index.js');
-      const mod = await import(userLifecyclePath).catch(() => null);
-      const lifecycle = mod?.default ?? mod;
-      if (lifecycle?.register) {
-        await lifecycle.register({ apick: this });
-      }
-    } catch {
-      // No user lifecycle file — that's fine
+    // Load user lifecycle file: src/index.{ts,js} → register()
+    const mod = await this.loadUserLifecycle();
+    const lifecycle = mod?.default ?? mod;
+    if (lifecycle?.register) {
+      await lifecycle.register({ apick: this });
     }
   }
 
   private async runBootstrapPhase(): Promise<void> {
-    // Load user lifecycle file: src/index.ts → bootstrap()
-    try {
-      const userLifecyclePath = path.join(this.dirs.app.src, 'index.js');
-      const mod = await import(userLifecyclePath).catch(() => null);
-      const lifecycle = mod?.default ?? mod;
-      if (lifecycle?.bootstrap) {
-        await lifecycle.bootstrap({ apick: this });
-      }
-    } catch {
-      // No user lifecycle file — that's fine
+    // Load user lifecycle file: src/index.{ts,js} → bootstrap()
+    const mod = await this.loadUserLifecycle();
+    const lifecycle = mod?.default ?? mod;
+    if (lifecycle?.bootstrap) {
+      await lifecycle.bootstrap({ apick: this });
     }
   }
 
@@ -437,15 +427,24 @@ export class Apick implements ApickInterface {
   }
 
   private async runDestroyPhase(): Promise<void> {
-    try {
-      const userLifecyclePath = path.join(this.dirs.app.src, 'index.js');
-      const mod = await import(userLifecyclePath).catch(() => null);
-      const lifecycle = mod?.default ?? mod;
-      if (lifecycle?.destroy) {
-        await lifecycle.destroy({ apick: this });
-      }
-    } catch {
-      // No user lifecycle file — that's fine
+    const mod = await this.loadUserLifecycle();
+    const lifecycle = mod?.default ?? mod;
+    if (lifecycle?.destroy) {
+      await lifecycle.destroy({ apick: this });
     }
+  }
+
+  private async loadUserLifecycle(): Promise<any> {
+    for (const ext of ['.ts', '.js']) {
+      const filePath = path.join(this.dirs.app.src, `index${ext}`);
+      if (fs.existsSync(filePath)) {
+        try {
+          return await import(filePath);
+        } catch {
+          // Try next extension
+        }
+      }
+    }
+    return null;
   }
 }

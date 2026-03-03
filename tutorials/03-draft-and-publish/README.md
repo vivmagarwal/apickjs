@@ -191,6 +191,16 @@ Here is the complete lifecycle of a content entry with draft and publish:
 
 ---
 
+## Documentation References
+
+The concepts in this tutorial are covered in more detail in these guides:
+
+- [Content API Guide](../../docs/CONTENT_API_GUIDE.md) -- Draft & Publish section: status query parameter, publish/unpublish endpoints, Document Service publish/unpublish/discardDraft methods
+- [Content Modeling Guide](../../docs/CONTENT_MODELING_GUIDE.md) -- `draftAndPublish` option, `published_at` system field
+- [Architecture](../../docs/ARCHITECTURE.md) -- Draft & Publish state diagram
+
+---
+
 ## Running the Tests
 
 ```bash

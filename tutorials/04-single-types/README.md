@@ -93,8 +93,8 @@ Response:
     "hero_title": "Welcome to APICK",
     "hero_subtitle": "Build APIs fast",
     "featured_count": 3,
-    "createdAt": "2026-03-03T10:00:00.000Z",
-    "updatedAt": "2026-03-03T10:00:00.000Z"
+    "created_at": "2026-03-03T10:00:00.000Z",
+    "updated_at": "2026-03-03T10:00:00.000Z"
   }
 }
 ```
@@ -129,6 +129,15 @@ This makes single types ideal for:
 - **About page** content
 - **Footer** configuration
 - Any content that should exist as exactly one instance
+
+## Documentation References
+
+The concepts in this tutorial are covered in more detail in these guides:
+
+- [Content API Guide](../../docs/CONTENT_API_GUIDE.md) -- Single Type endpoints table (GET, PUT, DELETE without `:id`)
+- [Content Modeling Guide](../../docs/CONTENT_MODELING_GUIDE.md) -- `kind: 'singleType'` vs `kind: 'collectionType'`
+
+---
 
 ## Running the Tests
 

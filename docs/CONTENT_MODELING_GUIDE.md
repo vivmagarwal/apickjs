@@ -8,7 +8,7 @@ Content types are the data models of APICK. Every content type produces a databa
 
 | Kind | `kind` value | Entries | Generated Endpoints |
 |------|-------------|---------|---------------------|
-| **Collection Type** | `collectionType` | 0..N | `GET /api/{plural}`, `GET /api/{plural}/:documentId`, `POST`, `PUT`, `DELETE` |
+| **Collection Type** | `collectionType` | 0..N | `GET /api/{plural}`, `GET /api/{plural}/:id`, `POST`, `PUT /:id`, `DELETE /:id`, `POST /:id/publish`, `POST /:id/unpublish` |
 | **Single Type** | `singleType` | Exactly 1 | `GET /api/{singular}`, `PUT /api/{singular}`, `DELETE /api/{singular}` |
 
 Collection types model repeating entities (articles, products). Single types model one-off data (homepage hero, global settings).
@@ -110,16 +110,16 @@ APICK auto-injects these fields into every content type. Do not declare them in 
 | Field | Type | Description |
 |-------|------|-------------|
 | `id` | `integer` (auto-increment) | Primary key. Internal only. |
-| `documentId` | `string` (UUID) | Stable public identifier across draft/published states and locales. |
-| `createdAt` | `datetime` | Row creation timestamp. |
-| `updatedAt` | `datetime` | Last modification timestamp. |
-| `publishedAt` | `datetime \| null` | Publication timestamp (`null` = draft). Only when `draftAndPublish: true`. |
-| `firstPublishedAt` | `datetime` | Set once on first publish. Never overwritten. |
+| `document_id` | `string` (UUID) | Stable public identifier across draft/published states and locales. |
+| `created_at` | `datetime` | Row creation timestamp. |
+| `updated_at` | `datetime` | Last modification timestamp. |
+| `published_at` | `datetime \| null` | Publication timestamp (`null` = draft). Only when `draftAndPublish: true`. |
+| `first_published_at` | `datetime` | Set once on first publish. Never overwritten. |
 | `createdBy` | `relation` | Admin user who created the entry (admin API only). |
 | `updatedBy` | `relation` | Admin user who last updated the entry (admin API only). |
 | `locale` | `string \| null` | Locale code. Only when i18n is enabled on the content type. |
 
-`documentId` vs `id`: The `id` is the database row primary key. The `documentId` groups all versions (draft, published, localized) of a single content entry. Always use `documentId` in the Content API.
+`document_id` vs `id`: The `id` is the database row primary key. The `document_id` groups all versions (draft, published, localized) of a single content entry. Always use `document_id` in the Content API.
 
 ### Composite Indexes
 

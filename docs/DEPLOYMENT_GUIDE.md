@@ -370,8 +370,8 @@ node dist/src/index.js | pino-datadog --apiKey $DD_API_KEY
 // src/index.ts
 export default {
   async bootstrap({ apick }) {
-    apick.eventHub.on('entry.create', async ({ uid }) => {
-      metrics.increment('content.created', { contentType: uid });
+    apick.eventHub.on('entry.create', async ({ result, params }) => {
+      metrics.increment('content.created');
     });
   },
 };

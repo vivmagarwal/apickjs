@@ -137,9 +137,9 @@ Response:
 ```json
 {
   "data": [
-    { "id": 2, "title": "Advanced Tips", "views": 1000, "featured": false },
-    { "id": 1, "title": "Getting Started", "views": 500, "featured": false },
-    { "id": 3, "title": "Quick Guide", "views": 250, "featured": false }
+    { "id": 2, "document_id": "...", "title": "Advanced Tips", "views": 1000, "featured": false },
+    { "id": 1, "document_id": "...", "title": "Getting Started", "views": 500, "featured": false },
+    { "id": 3, "document_id": "...", "title": "Quick Guide", "views": 250, "featured": false }
   ],
   "meta": { "description": "Top 3 most viewed articles" }
 }
@@ -154,6 +154,16 @@ DOC_ID=$(curl -s http://localhost:1337/api/articles | jq -r '.data[0].document_i
 # Toggle featured
 curl -X POST "http://localhost:1337/api/articles/${DOC_ID}/toggle-featured"
 ```
+
+## Documentation References
+
+The concepts in this tutorial are covered in more detail in these guides:
+
+- [Customization Guide](../../docs/CUSTOMIZATION_GUIDE.md) -- Controllers section: `createCoreController`, custom actions, route registration. Services section: `createCoreService`, extending default CRUD
+- [Content API Guide](../../docs/CONTENT_API_GUIDE.md) -- route registration order, per-content-type route configuration
+- [Development Standards](../../docs/DEVELOPMENT_STANDARDS.md) -- factory function patterns, custom controller examples
+
+---
 
 ## Running the Tests
 

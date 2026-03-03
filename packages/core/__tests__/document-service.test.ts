@@ -297,9 +297,9 @@ describe('Document Service', () => {
   // -----------------------------------------------------------------------
 
   describe('delete', () => {
-    it('deletes a document and returns its documentId', async () => {
+    it('deletes a document and returns its document_id', async () => {
       const result = await service.delete({ documentId: 'doc-1' });
-      expect(result).toEqual({ documentId: 'doc-1' });
+      expect(result).toEqual({ document_id: 'doc-1' });
 
       const found = await service.findOne({ documentId: 'doc-1' });
       expect(found).toBeNull();

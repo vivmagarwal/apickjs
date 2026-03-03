@@ -5,6 +5,8 @@
  * Currently supports SQLite via better-sqlite3.
  */
 
+import path from 'node:path';
+import fs from 'node:fs';
 import { AsyncLocalStorage } from 'node:async_hooks';
 import Database from 'better-sqlite3';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
@@ -44,6 +46,14 @@ export function createDatabase(config: DatabaseConfig, logger: Logger): Database
   const filename = connConfig.connection?.filename || connConfig.filename || ':memory:';
 
   logger.info({ client, filename }, 'Connecting to database');
+
+  // Auto-create directory for SQLite file if it doesn't exist
+  if (filename !== ':memory:') {
+    const dir = path.dirname(filename);
+    if (dir && !fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  }
 
   // Create better-sqlite3 connection
   const sqlite = new Database(filename);

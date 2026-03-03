@@ -16,8 +16,8 @@ Together, these give you full lifecycle hook capabilities without coupling busin
 The event hub is a simple publish/subscribe system. Any part of the application can emit events, and any number of subscribers can listen for them.
 
 ```typescript
-// Subscribe to an event
-eventHub.subscribe('article.created', (event) => {
+// Listen for an event
+eventHub.on('article.created', (event) => {
   console.log('New article:', event.title);
 });
 
@@ -27,7 +27,7 @@ await eventHub.emit('article.created', { title: 'Hello World' });
 
 Key properties:
 
-- **`eventHub.subscribe(event, handler)`** -- registers a handler for the given event name
+- **`eventHub.on(event, handler)`** -- registers a handler for the given event name
 - **`eventHub.emit(event, data)`** -- fires the event, passing `data` to each subscriber
 - **Sequential execution** -- subscribers run one after another in registration order, not in parallel. This guarantees ordering and prevents race conditions.
 
@@ -121,7 +121,7 @@ server.use(async (ctx, next) => {
 });
 
 // Subscriber reacts to the event
-eventHub.subscribe('article.created', (event) => {
+eventHub.on('article.created', (event) => {
   console.log(`Article created: ${event.title} (id: ${event.id})`);
   // Could also: send email, bust cache, index for search, etc.
 });
@@ -172,12 +172,12 @@ This gives you a full lifecycle hook in a single, readable function:
 Subscribers for a given event execute **sequentially**, not in parallel. This means each subscriber finishes before the next one starts:
 
 ```typescript
-eventHub.subscribe('test.order', async () => {
+eventHub.on('test.order', async () => {
   await new Promise(r => setTimeout(r, 10)); // simulate async work
   order.push(1);
 });
 
-eventHub.subscribe('test.order', async () => {
+eventHub.on('test.order', async () => {
   order.push(2);
 });
 
@@ -234,6 +234,16 @@ curl http://localhost:1337/api/articles
 
 ---
 
+## Documentation References
+
+The concepts in this tutorial are covered in more detail in these guides:
+
+- [Plugins Guide](../../docs/PLUGINS_GUIDE.md) -- Event Hub section: `eventHub.on()`, `eventHub.emit()`, built-in events (`entry.create`, `entry.update`, etc.), event payload structure (`{ result, params }`), sequential execution, error handling (fail-safe)
+- [Customization Guide](../../docs/CUSTOMIZATION_GUIDE.md) -- Middlewares section: onion model for before/after hooks, Lifecycle Hooks section: database-level callbacks
+- [Database Guide](../../docs/DATABASE_GUIDE.md) -- Document Service event emission during create/update/delete
+
+---
+
 ## Running Tests
 
 From the tutorial directory:
@@ -246,10 +256,10 @@ npm test
 
 The test suite covers:
 
-1. **eventHub.subscribe receives events when emitted** -- basic pub/sub works
-2. **Multiple subscribers receive the same event** -- fan-out to multiple listeners
+1. **eventHub.on receives events when emitted** -- basic pub/sub works
+2. **Multiple listeners receive the same event** -- fan-out to multiple listeners
 3. **Auto-slug middleware generates slug on create** -- before-hook modifies request
 4. **Auto-slug does not overwrite explicit slug** -- conditional before-hook logic
 5. **Post-create event fires after article creation** -- after-hook emits event
 6. **Combined: auto-slug + event notification on create** -- both patterns in one middleware
-7. **Subscribers execute sequentially** -- ordering guarantee with async subscribers
+7. **Listeners execute sequentially** -- ordering guarantee with async listeners

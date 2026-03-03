@@ -41,12 +41,18 @@ npx tsx ../../packages/cli/src/bin.ts develop
 Your API is live at `http://localhost:1337`. Try it out:
 
 ```bash
-# Create an article
+# Create an article (created as draft by default)
 curl -X POST http://localhost:1337/api/articles \
   -H "Content-Type: application/json" \
   -d '{ "data": { "title": "Hello World", "slug": "hello-world" } }'
 
-# List all articles
+# List draft articles (drafts are hidden by default)
+curl "http://localhost:1337/api/articles?status=draft"
+
+# Publish an article (replace DOCUMENT_ID with the document_id from create response)
+curl -X POST "http://localhost:1337/api/articles/DOCUMENT_ID/publish"
+
+# List published articles
 curl http://localhost:1337/api/articles
 ```
 
@@ -88,19 +94,20 @@ curl -X POST http://localhost:1337/api/articles \
 curl "http://localhost:1337/api/articles?filters[category][\$eq]=tutorial&sort=createdAt:desc&pagination[pageSize]=10&populate=author"
 
 # Publish a draft
-curl -X POST "http://localhost:1337/api/articles/abc123/actions/publish" \
-  -H "Authorization: Bearer $TOKEN"
+curl -X POST "http://localhost:1337/api/articles/DOCUMENT_ID/publish"
 ```
 
 **Response format** — always consistent:
 ```json
 {
   "data": {
-    "documentId": "abc123",
+    "id": 1,
+    "document_id": "abc123",
     "title": "Hello World",
     "category": "tutorial",
-    "createdAt": "2026-01-15T10:30:00.000Z",
-    "publishedAt": null
+    "created_at": "2026-01-15T10:30:00.000Z",
+    "updated_at": "2026-01-15T10:30:00.000Z",
+    "published_at": null
   },
   "meta": {}
 }
@@ -248,7 +255,7 @@ export default {
 
 ## Testing
 
-APICK is tested with **1,235 tests** across 66 test files. The same patterns are available for your project:
+APICK is tested with **1,352 tests** across 29 projects. The same patterns are available for your project:
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -258,16 +265,16 @@ describe('Articles API', () => {
     const create = await server.inject({
       method: 'POST',
       url: '/api/articles',
-      headers: { Authorization: `Bearer ${token}` },
-      payload: { data: { title: 'Test Article' } },
+      body: { data: { title: 'Test Article' } },
     });
     expect(create.statusCode).toBe(201);
 
+    const docId = create.body.data.document_id;
     const find = await server.inject({
       method: 'GET',
-      url: `/api/articles/${create.json().data.documentId}`,
+      url: `/api/articles/${docId}`,
     });
-    expect(find.json().data.title).toBe('Test Article');
+    expect(find.body.data.title).toBe('Test Article');
   });
 });
 ```
@@ -306,7 +313,7 @@ Works with Docker, PM2, Kubernetes, or any Node.js hosting. See the [Deployment 
 ```bash
 git clone https://github.com/vivmagarwal/apickjs.git && cd apickjs
 npm install
-npx vitest run   # 1,235 tests
+npx nx run-many --target=test   # 1,352 tests
 ```
 
 ## License

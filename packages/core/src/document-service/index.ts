@@ -77,7 +77,7 @@ export interface DocumentService {
   count(params?: { filters?: WhereClause; status?: 'published' | 'draft'; locale?: string }): Promise<number>;
   create(params: CreateParams): Promise<any>;
   update(params: UpdateParams): Promise<any | null>;
-  delete(params: DeleteParams): Promise<{ documentId: string } | null>;
+  delete(params: DeleteParams): Promise<{ document_id: string } | null>;
   clone(params: CloneParams): Promise<any>;
   publish(params: PublishParams): Promise<any[]>;
   unpublish(params: PublishParams): Promise<any[]>;
@@ -274,7 +274,7 @@ export function createDocumentService(options: DocumentServiceOptions): Document
       });
     },
 
-    async delete(params: DeleteParams): Promise<{ documentId: string } | null> {
+    async delete(params: DeleteParams): Promise<{ document_id: string } | null> {
       return runWithMiddleware('delete', params, async (p: DeleteParams) => {
         let where: WhereClause = { document_id: p.documentId };
         where = addLocaleFilter(where, p.locale);
@@ -285,7 +285,7 @@ export function createDocumentService(options: DocumentServiceOptions): Document
         // Delete all rows for this documentId (and locale if specified)
         await qe.deleteMany({ where });
 
-        const result = { documentId: p.documentId };
+        const result = { document_id: p.documentId };
 
         // Emit event
         eventHub.emit('entry.delete', { result, params: p });

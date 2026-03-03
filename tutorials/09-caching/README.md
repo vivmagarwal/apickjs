@@ -203,6 +203,15 @@ curl -v http://localhost:1337/api/articles 2>&1 | grep X-Cache
 
 ---
 
+## Documentation References
+
+The concepts in this tutorial are covered in more detail in these guides:
+
+- [Plugins Guide](../../docs/PLUGINS_GUIDE.md) -- Event Hub for cache invalidation patterns
+- [Customization Guide](../../docs/CUSTOMIZATION_GUIDE.md) -- Middlewares section: writing middleware for caching, onion model for intercepting responses
+
+---
+
 ## Running Tests
 
 ```bash

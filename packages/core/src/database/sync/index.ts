@@ -6,7 +6,7 @@
  */
 
 import type { Logger } from '@apick/types';
-import { fieldToSqliteColumn, getSystemColumns } from '../schema/field-mappings.js';
+import { fieldToSqliteColumn, getSystemColumns, SYSTEM_ATTRIBUTE_NAMES } from '../schema/field-mappings.js';
 
 /**
  * Synchronizes the database schema with the registered content types.
@@ -53,6 +53,9 @@ function createTable(
   const columns: string[] = [...getSystemColumns()];
 
   for (const [fieldName, fieldDef] of Object.entries(attributes)) {
+    // Skip system attributes — they're already in getSystemColumns()
+    if (SYSTEM_ATTRIBUTE_NAMES.has(fieldName)) continue;
+
     const col = fieldToSqliteColumn(fieldName, fieldDef as any);
     if (col.sql) {
       columns.push(col.sql);
@@ -78,6 +81,8 @@ function addMissingColumns(
   const existingColumnNames = new Set(existingColumns.map((c) => c.name));
 
   for (const [fieldName, fieldDef] of Object.entries(attributes)) {
+    // Skip system attributes — handled by getSystemColumns()
+    if (SYSTEM_ATTRIBUTE_NAMES.has(fieldName)) continue;
     if (existingColumnNames.has(fieldName)) continue;
 
     const col = fieldToSqliteColumn(fieldName, fieldDef as any);
