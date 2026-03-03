@@ -1,0 +1,42 @@
+{
+  "name": "apickjs",
+  "version": "2.0.2",
+  "description": "APICK - API Construction Kit. Pure headless CMS built TypeScript-first with no admin UI.",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "cms",
+    "headless-cms",
+    "api",
+    "typescript",
+    "rest-api",
+    "content-management",
+    "node"
+  ],
+  "homepage": "https://github.com/vivmagarwal/apickjs#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vivmagarwal/apickjs.git"
+  },
+  "license": "MIT",
+  "author": "Vivek Magarwal <vivmagarwal@gmail.com>",
+  "scripts": {
+    "build": "nx run-many --target=build --nx-ignore-cycles",
+    "clean": "nx run-many --target=clean --nx-ignore-cycles",
+    "test": "nx run-many --target=test --nx-ignore-cycles",
+    "test:unit": "nx run-many --target=test:unit --nx-ignore-cycles",
+    "lint": "nx run-many --target=lint --nx-ignore-cycles"
+  },
+  "devDependencies": {
+    "nx": "^20.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0",
+    "@types/node": "^22.0.0",
+    "rimraf": "^6.0.0"
+  }
+}

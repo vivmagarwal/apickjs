@@ -1,0 +1,27 @@
+{
+  "name": "apick-starter",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "develop": "apick develop",
+    "start": "apick start",
+    "build": "apick build",
+    "generate:types": "apick ts:generate-types"
+  },
+  "dependencies": {
+    "@apick/core": "workspace:*",
+    "@apick/admin": "workspace:*",
+    "@apick/content-manager": "workspace:*",
+    "@apick/users-permissions": "workspace:*",
+    "@apick/i18n": "workspace:*",
+    "@apick/upload": "workspace:*",
+    "@apick/email": "workspace:*",
+    "@apick/cli": "workspace:*",
+    "@apick/types": "workspace:*",
+    "@apick/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}
