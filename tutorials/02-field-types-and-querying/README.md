@@ -1,5 +1,7 @@
 # Tutorial 02: Field Types and Querying
 
+> **Monorepo tutorial.** This tutorial runs within the [apickjs monorepo](https://github.com/vivmagarwal/apickjs). Clone the repo and `npm install` at the root first. For standalone npm projects, see the [Getting Started guide](../../docs/GETTING_STARTED.md).
+
 In this tutorial you will build an **Article** content type that exercises eight different field types, then query the collection using sorting and pagination.
 
 ## What You Will Build
@@ -105,15 +107,19 @@ The response wraps the created document in the standard envelope:
     "content": "<p>APIck is a headless CMS...</p>",
     "excerpt": "A quick introduction to APIck CMS.",
     "views": 0,
-    "featured": true,
+    "featured": 1,
     "category": "tutorial",
     "metadata": "{\"seo\": {\"keywords\": [\"cms\", \"api\"]}}",
     "created_at": "2026-03-03T...",
-    "updated_at": "2026-03-03T..."
+    "updated_at": "2026-03-03T...",
+    "published_at": null,
+    "locale": null
   },
   "meta": {}
 }
 ```
+
+> **Note:** Boolean fields like `featured` are stored as integers in SQLite (`1` for `true`, `0` for `false`). Your application code should handle this conversion.
 
 ## Step 3 -- Sorting
 

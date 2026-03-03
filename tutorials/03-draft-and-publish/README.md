@@ -1,5 +1,7 @@
 # Tutorial 03: Draft and Publish
 
+> **Monorepo tutorial.** This tutorial runs within the [apickjs monorepo](https://github.com/vivmagarwal/apickjs). Clone the repo and `npm install` at the root first. For standalone npm projects, see the [Getting Started guide](../../docs/GETTING_STARTED.md).
+
 ## What You'll Build
 
 An **Article API** with a full draft/publish workflow. Content starts as a draft, can be published to make it publicly visible, and can be unpublished to revert it back to draft status.

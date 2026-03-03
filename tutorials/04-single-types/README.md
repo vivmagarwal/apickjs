@@ -1,5 +1,7 @@
 # Tutorial 04: Single Types
 
+> **Monorepo tutorial.** This tutorial runs within the [apickjs monorepo](https://github.com/vivmagarwal/apickjs). Clone the repo and `npm install` at the root first. For standalone npm projects, see the [Getting Started guide](../../docs/GETTING_STARTED.md).
+
 In previous tutorials we worked exclusively with **collection types** — content types that store multiple entries (articles, categories, etc.). APICK also supports **single types**, which represent content that exists as exactly one instance: a homepage, a global settings object, an "about us" page, and so on.
 
 ## Collection Types vs Single Types

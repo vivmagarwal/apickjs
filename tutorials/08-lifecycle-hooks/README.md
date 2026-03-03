@@ -1,5 +1,7 @@
 # Tutorial 08: Lifecycle Hooks and Events
 
+> **Monorepo tutorial.** This tutorial runs within the [apickjs monorepo](https://github.com/vivmagarwal/apickjs). Clone the repo and `npm install` at the root first. For standalone npm projects, see the [Getting Started guide](../../docs/GETTING_STARTED.md).
+
 In a headless CMS, you often need to run custom logic **before** or **after** core operations like creating, updating, or deleting content. Apick achieves this with two complementary mechanisms:
 
 - **Middleware** -- intercepts requests to run "before" logic (modify input) and "after" logic (react to results)
@@ -52,6 +54,33 @@ server.use(async (ctx, next) => {
 This makes middleware the natural place for lifecycle hooks.
 
 ---
+
+## Registering Hooks via `src/index.ts`
+
+Middleware and event hub listeners need to be registered during server startup. Create a `src/index.ts` file that exports a `bootstrap()` function — APICK calls this automatically after the database is ready:
+
+```typescript
+// src/index.ts
+export default {
+  async bootstrap({ apick }: { apick: any }) {
+    const { server, eventHub } = apick;
+
+    // Register middleware (lifecycle hooks)
+    server.use(async (ctx: any, next: any) => {
+      // before hook: modify request
+      await next();
+      // after hook: react to response, emit events
+    });
+
+    // Register event listeners
+    eventHub.on('article.created', (event: any) => {
+      console.log(`Article created: ${event.title}`);
+    });
+  },
+};
+```
+
+The tests in this tutorial register middleware per-test using `env.server.use()`, which is equivalent to registering them in `src/index.ts` for the actual server.
 
 ## Example 1: Auto-Slug Generation (Before Hook)
 

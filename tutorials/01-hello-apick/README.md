@@ -27,17 +27,7 @@ APIck auto-generates five REST endpoints from this single definition:
 
 ## Step 1: Set Up the Project
 
-### Option A: From the monorepo (recommended for tutorials)
-
-```bash
-git clone https://github.com/vivmagarwal/apickjs.git
-cd apickjs
-npm install
-```
-
-The monorepo uses npm workspaces. A single `npm install` at the root fetches everything, including this tutorial's dev dependencies.
-
-### Option B: From npm (standalone project)
+### Option A: From npm (standalone project)
 
 ```bash
 mkdir my-apick-app && cd my-apick-app
@@ -45,11 +35,31 @@ npm init -y
 npm install @apick/core @apick/cli @apick/types
 ```
 
+Set `"type": "module"` in your `package.json`:
+
+```json
+{
+  "type": "module"
+}
+```
+
 Then create the directory structure shown in Step 2 and Step 3 below.
+
+### Option B: From the monorepo (recommended for tutorials)
+
+```bash
+git clone https://github.com/vivmagarwal/apickjs.git
+cd apickjs
+npm install
+```
+
+The monorepo uses npm workspaces. A single `npm install` at the root fetches everything, including this tutorial's dev dependencies. The files from Step 2 and Step 3 already exist in `tutorials/01-hello-apick/`.
 
 ## Step 2: Define the Post Content Type
 
-Create the file `tutorials/01-hello-apick/src/api/post/content-type.ts`:
+Create the file `src/api/post/content-type.ts`:
+
+> **Monorepo users:** This file already exists at `tutorials/01-hello-apick/src/api/post/content-type.ts`.
 
 ```typescript
 export default {
@@ -78,6 +88,8 @@ This is the only file you *must* write to get a working API. APIck reads this sc
 ## Step 3: Add Configuration Files
 
 APIck loads config from a `config/` directory next to your `src/` folder.
+
+> **Monorepo users:** These files already exist in `tutorials/01-hello-apick/config/`.
 
 ### config/server.ts
 
@@ -113,10 +125,17 @@ This prefixes every auto-generated route with `/api`, so the `posts` plural name
 
 ## Step 4: Start the Server
 
-From the repository root:
+### Option A: From npm (standalone)
 
 ```bash
-npx tsx packages/cli/src/bin.ts develop --dir tutorials/01-hello-apick
+npx apick develop
+```
+
+### Option B: From the monorepo
+
+```bash
+cd tutorials/01-hello-apick
+npx tsx ../../packages/cli/src/bin.ts develop
 ```
 
 You should see output like:
@@ -147,11 +166,18 @@ Expected response (status 201):
     "title": "My First Post",
     "body": "Hello world!",
     "created_at": "2026-03-03T12:00:00.000Z",
-    "updated_at": "2026-03-03T12:00:00.000Z"
+    "updated_at": "2026-03-03T12:00:00.000Z",
+    "published_at": null,
+    "first_published_at": null,
+    "created_by": null,
+    "updated_by": null,
+    "locale": null
   },
   "meta": {}
 }
 ```
+
+> **Note:** Fields like `published_at`, `created_by`, `updated_by`, and `locale` are system fields added to every content type. They are `null` here because this content type has `draftAndPublish: false` and no authentication is configured.
 
 ### List all posts
 
@@ -170,7 +196,9 @@ Expected response (status 200):
       "title": "My First Post",
       "body": "Hello world!",
       "created_at": "2026-03-03T12:00:00.000Z",
-      "updated_at": "2026-03-03T12:00:00.000Z"
+      "updated_at": "2026-03-03T12:00:00.000Z",
+      "published_at": null,
+      "locale": null
     }
   ],
   "meta": {
@@ -202,7 +230,9 @@ Expected response (status 200):
     "title": "My First Post",
     "body": "Hello world!",
     "created_at": "2026-03-03T12:00:00.000Z",
-    "updated_at": "2026-03-03T12:00:00.000Z"
+    "updated_at": "2026-03-03T12:00:00.000Z",
+    "published_at": null,
+    "locale": null
   },
   "meta": {}
 }
@@ -226,7 +256,9 @@ Expected response (status 200):
     "title": "Updated Title",
     "body": "New content",
     "created_at": "2026-03-03T12:00:00.000Z",
-    "updated_at": "2026-03-03T12:00:05.000Z"
+    "updated_at": "2026-03-03T12:00:05.000Z",
+    "published_at": null,
+    "locale": null
   },
   "meta": {}
 }
@@ -243,12 +275,7 @@ Expected response (status 200):
 ```json
 {
   "data": {
-    "id": 1,
-    "document_id": "abc123...",
-    "title": "Updated Title",
-    "body": "New content",
-    "created_at": "2026-03-03T12:00:00.000Z",
-    "updated_at": "2026-03-03T12:00:05.000Z"
+    "document_id": "abc123..."
   },
   "meta": {}
 }
@@ -297,14 +324,16 @@ All responses follow a consistent envelope:
 
 The concepts in this tutorial are covered in more detail in these guides:
 
-- [Content Modeling Guide](../../docs/CONTENT_MODELING_GUIDE.md) -- content type schemas, field types, system fields (`document_id`, `created_at`, etc.)
-- [Content API Guide](../../docs/CONTENT_API_GUIDE.md) -- auto-generated REST endpoints, request/response format, error envelope
-- [Architecture](../../docs/ARCHITECTURE.md) -- project structure, startup lifecycle, UID namespace system
-- [Development Standards](../../docs/DEVELOPMENT_STANDARDS.md) -- TypeScript conventions, file organization, config files
+- [Content Modeling Guide](../../docs/CONTENT_MODELING_GUIDE.md) -- content type schemas, field types, system fields (`document_id`, `created_at`, etc.). ([GitHub](https://github.com/vivmagarwal/apickjs/blob/main/docs/CONTENT_MODELING_GUIDE.md))
+- [Content API Guide](../../docs/CONTENT_API_GUIDE.md) -- auto-generated REST endpoints, request/response format, error envelope. ([GitHub](https://github.com/vivmagarwal/apickjs/blob/main/docs/CONTENT_API_GUIDE.md))
+- [Architecture](../../docs/ARCHITECTURE.md) -- project structure, startup lifecycle, UID namespace system. ([GitHub](https://github.com/vivmagarwal/apickjs/blob/main/docs/ARCHITECTURE.md))
+- [Development Standards](../../docs/DEVELOPMENT_STANDARDS.md) -- TypeScript conventions, file organization, config files. ([GitHub](https://github.com/vivmagarwal/apickjs/blob/main/docs/DEVELOPMENT_STANDARDS.md))
 
 ---
 
 ## Running the Tests
+
+> **Note:** Tests use `test-helpers.ts` which imports from the monorepo workspace packages. They work only within the monorepo. For standalone test patterns, see [Tutorial 10: Testing](../10-testing/).
 
 From the repository root:
 

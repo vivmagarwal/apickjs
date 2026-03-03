@@ -16,6 +16,8 @@ Most headless CMS tools give you a UI you'll eventually outgrow, a GraphQL layer
 
 Define a content type. Get a full CRUD API. Add auth, middleware, draft/publish, caching, event hooks — all through the same consistent patterns. No code generation. No magic. Just functions, middleware, and configuration.
 
+**New to APICK?** Follow the [Getting Started guide](./docs/GETTING_STARTED.md) to build a working API in under 5 minutes.
+
 ## Why APICK
 
 **For teams building serious content infrastructure:**
@@ -29,7 +31,7 @@ Define a content type. Get a full CRUD API. Add auth, middleware, draft/publish,
 ## Install
 
 ```bash
-npm install @apick/core @apick/cli @apick/types @apick/utils
+npm install @apick/core @apick/cli @apick/types
 ```
 
 Or work from the monorepo source:
@@ -49,7 +51,13 @@ npm init -y
 npm install @apick/core @apick/cli @apick/types
 ```
 
-Create a content type, config files, and start the server. See [Tutorial 01](./tutorials/01-hello-apick/) for the full walkthrough.
+Create a content type in `src/api/post/content-type.ts`, add config files in `config/`, then start:
+
+```bash
+npx apick develop
+```
+
+See the [Getting Started guide](./docs/GETTING_STARTED.md) for the full walkthrough.
 
 ### Option B: From the monorepo
 
@@ -300,6 +308,7 @@ Progressive tutorial series — each builds on the previous, with working code a
 
 | Guide | What it covers |
 |-------|---------------|
+| [Getting Started](./docs/GETTING_STARTED.md) | Zero-to-running standalone project in 5 minutes |
 | [Architecture](./docs/ARCHITECTURE.md) | System overview, package structure, request lifecycle |
 | [Content Modeling](./docs/CONTENT_MODELING_GUIDE.md) | Content types, field types, components, relations |
 | [Content API](./docs/CONTENT_API_GUIDE.md) | REST endpoints, query params, filtering, draft/publish |

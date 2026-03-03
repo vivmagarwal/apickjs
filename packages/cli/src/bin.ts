@@ -3,13 +3,22 @@
  * APICK CLI entry point.
  *
  * Usage:
- *   npx tsx packages/cli/src/bin.ts develop
- *   npx tsx packages/cli/src/bin.ts start
+ *   npx apick develop
+ *   npx apick start
  */
+
+import { register } from 'node:module';
+
+// Register tsx so user .ts files (content types, config) can be imported
+try {
+  register('tsx/esm', import.meta.url);
+} catch {
+  // tsx not available — .js imports still work (pre-compiled production code)
+}
 
 import { createCli, builtinCommands } from './cli.js';
 
-const cli = createCli('0.1.0');
+const cli = createCli('0.3.0');
 
 for (const cmd of builtinCommands) {
   cli.register(cmd);

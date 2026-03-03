@@ -1,5 +1,7 @@
 # Tutorial 09: Caching
 
+> **Monorepo tutorial.** This tutorial runs within the [apickjs monorepo](https://github.com/vivmagarwal/apickjs). Clone the repo and `npm install` at the root first. For standalone npm projects, see the [Getting Started guide](../../docs/GETTING_STARTED.md).
+
 ## What You'll Build
 
 In this tutorial you will add a caching layer to your API so that repeated
@@ -27,7 +29,7 @@ By the end you will have:
 | npm          | >= 10   |
 
 Make sure you have completed the earlier tutorials (especially **Tutorial 01:
-Hello World** and **Tutorial 06: Middleware**) so that the core concepts of
+Hello World** and **Tutorial 05: Middleware**) so that the core concepts of
 content types, the HTTP server, and middleware are familiar.
 
 ---

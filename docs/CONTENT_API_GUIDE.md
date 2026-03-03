@@ -252,6 +252,8 @@ curl "http://localhost:1337/api/articles?pagination[page]=2&pagination[pageSize]
 
 Response meta: `{ "page": 2, "pageSize": 10, "pageCount": 9, "total": 87 }`
 
+> **Flat query params also supported:** You can use `?page=2&pageSize=10` as a shorthand for `?pagination[page]=2&pagination[pageSize]=10`. Both formats produce identical results. The flat format is simpler and commonly used in tutorials and tests.
+
 #### Offset-Based
 
 | Parameter | Description | Default |
@@ -264,6 +266,8 @@ curl "http://localhost:1337/api/articles?pagination[start]=20&pagination[limit]=
 ```
 
 Response meta: `{ "start": 20, "limit": 10, "total": 87 }`
+
+> **Flat query params also supported:** You can use `?start=20&limit=10` as a shorthand for `?pagination[start]=20&pagination[limit]=10`.
 
 #### Configuration
 

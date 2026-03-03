@@ -1,6 +1,6 @@
 {
   "name": "@apick/cli",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "CLI tool for APICK headless CMS — develop, build, start, migrate",
   "type": "module",
   "license": "MIT",
@@ -16,7 +16,8 @@
   "files": ["dist/"],
   "scripts": { "build": "tsc -p tsconfig.build.json", "test": "vitest run" },
   "dependencies": {
-    "@apick/core": "0.2.0"
+    "@apick/core": "0.2.0",
+    "tsx": "^4.0.0"
   },
   "devDependencies": {
     "typescript": "^5.7.0", "vitest": "^3.0.0", "@types/node": "^22.0.0"

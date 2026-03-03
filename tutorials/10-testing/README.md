@@ -1,5 +1,7 @@
 # Tutorial 10: Testing Your APIck App
 
+> **Monorepo tutorial.** This tutorial runs within the [apickjs monorepo](https://github.com/vivmagarwal/apickjs). Clone the repo and `npm install` at the root first. For standalone npm projects, see the [Getting Started guide](../../docs/GETTING_STARTED.md).
+
 In this final tutorial of the series, we bring everything together by showing you how to **test** an APIck application thoroughly. Instead of a traditional walkthrough, the test file itself _is_ the tutorial — each `describe` block demonstrates a real-world testing pattern you can copy into your own projects.
 
 ---
@@ -41,7 +43,7 @@ import { createTestEnv, signJWT, verifyJWT } from '../../test-helpers.js';
 
 1. **Creates an in-memory SQLite database** — no files on disk, no cleanup needed.
 2. **Registers your content types** and builds the corresponding tables automatically.
-3. **Returns a fully wired environment** (`server`, `db`, `eventHub`) ready to accept `inject()` calls.
+3. **Returns a fully wired environment** (`server`, `db`, `eventHub`, `cache`, `logger`, `apick`, `documents`) ready to accept `inject()` calls.
 
 Because each call to `createTestEnv` produces a completely independent database, **every test starts from a clean slate** with zero data leakage between tests.
 
@@ -262,8 +264,8 @@ Congratulations on completing all 10 tutorials! Here is what we covered:
 | 04 | Single Types | Single-type content (e.g., homepage), PUT/GET semantics |
 | 05 | Middleware | Global middleware, route-scoped middleware, the onion model |
 | 06 | Authentication | JWT-based auth, protected routes, user context |
-| 07 | Custom Controllers | Override default CRUD, custom business logic |
-| 08 | Lifecycle Hooks | beforeCreate, afterUpdate, and other model hooks |
+| 07 | Custom Controllers | Custom routes alongside auto-generated CRUD |
+| 08 | Lifecycle Hooks | Middleware-based lifecycle hooks and event hub |
 | 09 | Caching | In-memory LRU cache, TTL, cache invalidation |
 | 10 | Testing | server.inject(), createTestEnv, 6 testing patterns |
 

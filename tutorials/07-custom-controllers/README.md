@@ -1,5 +1,7 @@
 # Tutorial 07: Custom Controllers and Services
 
+> **Monorepo tutorial.** This tutorial runs within the [apickjs monorepo](https://github.com/vivmagarwal/apickjs). Clone the repo and `npm install` at the root first. For standalone npm projects, see the [Getting Started guide](../../docs/GETTING_STARTED.md).
+
 The auto-generated CRUD routes (`GET`, `POST`, `PUT`, `DELETE`) cover standard data operations, but real-world APIs often need endpoints that go beyond simple create/read/update/delete. You might need to return a filtered subset of data, perform a multi-step business logic operation, or combine data from multiple content types into a single response.
 
 This tutorial shows how to register **custom routes** that sit alongside the auto-generated ones, using the document service to interact with your data.
@@ -15,7 +17,36 @@ Standard CRUD is great for basic data management, but consider these scenarios:
 
 Each of these requires custom logic that the generic CRUD handlers cannot provide.
 
-## Adding Custom Routes via `server.route()`
+## Registering Custom Routes via `src/index.ts`
+
+APICK discovers content types automatically from `src/api/*/content-type.ts`, but custom routes need to be registered in a **lifecycle file** at `src/index.ts`. This file can export `register()` and `bootstrap()` functions that run during server startup:
+
+- **`register({ apick })`** — runs early, before the database is ready. Use for middleware and non-DB routes.
+- **`bootstrap({ apick })`** — runs after the database is ready. Use for routes that need the document service.
+
+Since custom routes typically query data, use `bootstrap()`:
+
+```typescript
+// src/index.ts
+export default {
+  async bootstrap({ apick }: { apick: any }) {
+    const { server } = apick;
+
+    // Register custom routes here — the document service is available
+    server.route({
+      method: 'GET',
+      path: '/api/articles/popular',
+      handler: async (ctx: any) => {
+        // ... handler code ...
+      },
+    });
+  },
+};
+```
+
+The routes registered in `bootstrap()` are added to the router before the auto-generated CRUD routes, so static paths like `/api/articles/popular` coexist correctly with parametric paths like `/api/articles/:id`.
+
+## Custom Route Examples
 
 Custom routes are registered by calling `server.route()` with a method, path, and handler function. The handler receives a `ctx` object (the same context used by built-in routes) and can use the document service to query or mutate data.
 
@@ -137,9 +168,9 @@ Response:
 ```json
 {
   "data": [
-    { "id": 2, "document_id": "...", "title": "Advanced Tips", "views": 1000, "featured": false },
-    { "id": 1, "document_id": "...", "title": "Getting Started", "views": 500, "featured": false },
-    { "id": 3, "document_id": "...", "title": "Quick Guide", "views": 250, "featured": false }
+    { "id": 2, "document_id": "...", "title": "Advanced Tips", "views": 1000, "featured": 0 },
+    { "id": 1, "document_id": "...", "title": "Getting Started", "views": 500, "featured": 0 },
+    { "id": 3, "document_id": "...", "title": "Quick Guide", "views": 250, "featured": 0 }
   ],
   "meta": { "description": "Top 3 most viewed articles" }
 }

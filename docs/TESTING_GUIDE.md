@@ -1006,11 +1006,10 @@ export async function createTestUser(
   const response = await apick.server.inject({
     method: 'POST',
     url: '/api/auth/local/register',
-    payload: data,
+    body: data,
   });
 
-  const body = response.json();
-  return { jwt: body.jwt, user: body.user, credentials: data };
+  return { jwt: response.body.jwt, user: response.body.user, credentials: data };
 }
 ```
 
@@ -1020,7 +1019,7 @@ export async function createTestUser(
 interface InjectOptions {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   url: string;
-  payload?: unknown;
+  body?: unknown;
   headers?: Record<string, string>;
   query?: Record<string, string>;
 }
@@ -1041,7 +1040,7 @@ export function injectRequest(
   return apick.server.inject({
     method: options.method,
     url: options.url,
-    payload: options.payload,
+    body: options.body,
     headers,
     query: options.query,
   });

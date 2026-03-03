@@ -1,5 +1,7 @@
 # Tutorial 05: Middleware
 
+> **Monorepo tutorial.** This tutorial runs within the [apickjs monorepo](https://github.com/vivmagarwal/apickjs). Clone the repo and `npm install` at the root first. For standalone npm projects, see the [Getting Started guide](../../docs/GETTING_STARTED.md).
+
 In this tutorial you will learn how APIck's **middleware pipeline** works. Middleware lets you intercept every request and response, adding cross-cutting behaviour such as timing, logging, authentication, and more -- without touching your route handlers.
 
 ## What You Will Learn
@@ -262,4 +264,4 @@ The test suite verifies:
 
 ## Next Steps
 
-Continue to [Tutorial 06: Error Handling](../06-error-handling/) to learn how APIck structures error responses and how middleware can catch and transform errors.
+Continue to [Tutorial 06: Authentication](../06-authentication/) to learn how to protect your API with JWT-based authentication.

@@ -93,7 +93,7 @@ describe('Tutorial 05: Middleware', () => {
     expect(order).toEqual([1, 2, 3, 4]);
   });
 
-  it('three-layer onion model [1,2,3,6,5,4]', async () => {
+  it('three-layer onion model [1,2,3,4,5,6]', async () => {
     const order: number[] = [];
 
     env.server.use(async (_ctx, next) => { order.push(1); await next(); order.push(6); });

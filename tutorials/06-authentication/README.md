@@ -1,5 +1,7 @@
 # Tutorial 06: Authentication with JWT
 
+> **Monorepo tutorial.** This tutorial runs within the [apickjs monorepo](https://github.com/vivmagarwal/apickjs). Clone the repo and `npm install` at the root first. For standalone npm projects, see the [Getting Started guide](../../docs/GETTING_STARTED.md).
+
 ## What You'll Build
 
 In this tutorial you will protect your API endpoints with **JSON Web Token (JWT)** authentication. By the end, unauthenticated requests will receive a `401 Unauthorized` response, while requests carrying a valid Bearer token will pass through to your content API as normal.

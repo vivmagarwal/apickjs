@@ -7,8 +7,10 @@
 ```bash
 mkdir my-app && cd my-app
 npm init -y
-npm install @apick/core @apick/cli @apick/types @apick/utils
+npm install @apick/core @apick/cli @apick/types
 ```
+
+Set `"type": "module"` in your `package.json`, create your content types in `src/api/`, config files in `config/`, and start with `npx apick develop`. See the [Getting Started guide](./GETTING_STARTED.md) for a full walkthrough.
 
 ### From the monorepo (for contributing or running tutorials)
 
@@ -266,7 +268,7 @@ npm init -y
 npm install @apick/core @apick/cli @apick/types
 ```
 
-Then create your content types in `src/api/`, config files in `config/`, and start with `npx apick develop`.
+Set `"type": "module"` in your `package.json`. Then create your content types in `src/api/`, config files in `config/`, and start with `npx apick develop`.
 
 **From the monorepo:**
 
