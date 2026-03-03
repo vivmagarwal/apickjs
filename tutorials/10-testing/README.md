@@ -268,5 +268,6 @@ Congratulations on completing all 10 tutorials! Here is what we covered:
 | 08 | Lifecycle Hooks | Middleware-based lifecycle hooks and event hub |
 | 09 | Caching | In-memory LRU cache, TTL, cache invalidation |
 | 10 | Testing | server.inject(), createTestEnv, 6 testing patterns |
+| 11 | CLI Toolkit | parseArgs, createCli, environment config, custom commands |
 
 You now have the foundation to build, customize, and thoroughly test a production-grade headless CMS with APIck.
