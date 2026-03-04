@@ -111,6 +111,7 @@ export interface Server {
   inject(options: InjectOptions): Promise<InjectResponse>;
   use(middleware: MiddlewareHandler): void;
   route(options: RouteOptions): void;
+  getRoutes?(): { method: string; path: string }[];
 }
 
 export interface InjectOptions {

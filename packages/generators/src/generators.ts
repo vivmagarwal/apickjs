@@ -2,10 +2,12 @@
  * Code Generators.
  *
  * Generates scaffold files for APIs, controllers, services, policies,
- * middlewares, and plugins.
+ * middlewares, plugins, and projects.
  */
 
 import { join } from 'node:path';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { dirname } from 'node:path';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -16,6 +18,16 @@ export interface GeneratorOptions {
   baseDir?: string;
   singularName?: string;
   pluralName?: string;
+  displayName?: string;
+  kind?: 'collectionType' | 'singleType';
+  draftAndPublish?: boolean;
+  attributes?: Record<string, any>;
+}
+
+export interface ProjectOptions {
+  name: string;
+  database?: 'sqlite' | 'postgres' | 'mysql';
+  port?: number;
 }
 
 export interface GeneratedFile {
@@ -53,6 +65,40 @@ function pluralize(str: string): string {
 }
 
 // ---------------------------------------------------------------------------
+// Write utility
+// ---------------------------------------------------------------------------
+
+export function writeGeneratedFiles(files: GeneratedFile[], rootDir: string): void {
+  for (const file of files) {
+    const fullPath = join(rootDir, file.path);
+    mkdirSync(dirname(fullPath), { recursive: true });
+    writeFileSync(fullPath, file.content, 'utf8');
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Attribute serializer
+// ---------------------------------------------------------------------------
+
+function serializeAttributes(attributes: Record<string, any>): string {
+  const lines: string[] = [];
+  for (const [key, config] of Object.entries(attributes)) {
+    const parts: string[] = [];
+    for (const [prop, val] of Object.entries(config)) {
+      if (typeof val === 'string') {
+        parts.push(`${prop}: '${val}'`);
+      } else if (Array.isArray(val)) {
+        parts.push(`${prop}: [${val.map(v => `'${v}'`).join(', ')}]`);
+      } else {
+        parts.push(`${prop}: ${JSON.stringify(val)}`);
+      }
+    }
+    lines.push(`    ${key}: { ${parts.join(', ')} },`);
+  }
+  return lines.join('\n');
+}
+
+// ---------------------------------------------------------------------------
 // Generators
 // ---------------------------------------------------------------------------
 
@@ -61,27 +107,33 @@ export function generateApi(options: GeneratorOptions): GeneratedFile[] {
   const baseDir = options.baseDir || 'src/api';
   const singular = options.singularName || kebabCase(name);
   const plural = options.pluralName || pluralize(singular);
+  const display = options.displayName || pascalCase(name);
+  const kind = options.kind || 'collectionType';
+  const draftAndPublish = options.draftAndPublish ?? false;
   const apiDir = join(baseDir, singular);
+
+  const attributes = options.attributes || {
+    title: { type: 'string', required: true },
+    description: { type: 'text' },
+  };
 
   const files: GeneratedFile[] = [];
 
-  // Content type schema
+  // Content type — matches core/lifecycle/apick.ts:402 auto-discovery path
   files.push({
-    path: join(apiDir, 'content-types', singular, 'schema.ts'),
+    path: join(apiDir, 'content-type.ts'),
     content: `export default {
-  kind: 'collectionType' as const,
+  kind: '${kind}' as const,
   info: {
     singularName: '${singular}',
     pluralName: '${plural}',
-    displayName: '${pascalCase(name)}',
-    description: '',
+    displayName: '${display}',
   },
   options: {
-    draftAndPublish: true,
+    draftAndPublish: ${draftAndPublish},
   },
   attributes: {
-    title: { type: 'string' as const, required: true },
-    description: { type: 'text' as const },
+${serializeAttributes(attributes)}
   },
 };
 `,
@@ -94,9 +146,7 @@ export function generateApi(options: GeneratorOptions): GeneratedFile[] {
  * ${singular} controller.
  */
 
-import { factories } from '@apick/core';
-
-export default factories.createCoreController('api::${singular}.${singular}');
+export default {};
 `,
   });
 
@@ -107,9 +157,7 @@ export default factories.createCoreController('api::${singular}.${singular}');
  * ${singular} service.
  */
 
-import { factories } from '@apick/core';
-
-export default factories.createCoreService('api::${singular}.${singular}');
+export default {};
 `,
   });
 
@@ -120,9 +168,7 @@ export default factories.createCoreService('api::${singular}.${singular}');
  * ${singular} router.
  */
 
-import { factories } from '@apick/core';
-
-export default factories.createCoreRouter('api::${singular}.${singular}');
+export default {};
 `,
   });
 
@@ -141,9 +187,7 @@ export function generateController(options: GeneratorOptions): GeneratedFile[] {
  * ${singular} controller.
  */
 
-import { factories } from '@apick/core';
-
-export default factories.createCoreController('api::${singular}.${singular}');
+export default {};
 `,
   }];
 }
@@ -160,9 +204,7 @@ export function generateService(options: GeneratorOptions): GeneratedFile[] {
  * ${singular} service.
  */
 
-import { factories } from '@apick/core';
-
-export default factories.createCoreService('api::${singular}.${singular}');
+export default {};
 `,
   }];
 }
@@ -360,6 +402,163 @@ export const controllers = {
 };
 `,
   });
+
+  return files;
+}
+
+// ---------------------------------------------------------------------------
+// Project generator
+// ---------------------------------------------------------------------------
+
+export function generateProject(options: ProjectOptions): GeneratedFile[] {
+  const { name, database = 'sqlite', port = 1337 } = options;
+  const files: GeneratedFile[] = [];
+
+  // package.json
+  files.push({
+    path: 'package.json',
+    content: JSON.stringify({
+      name: kebabCase(name),
+      version: '1.0.0',
+      type: 'module',
+      private: true,
+      scripts: {
+        develop: 'apick develop',
+        start: 'apick start',
+        build: 'apick build',
+      },
+      dependencies: {
+        '@apick/cli': '^0.4.0',
+        '@apick/core': '^0.3.0',
+        '@apick/types': '^0.3.0',
+      },
+    }, null, 2) + '\n',
+  });
+
+  // tsconfig.json
+  files.push({
+    path: 'tsconfig.json',
+    content: JSON.stringify({
+      compilerOptions: {
+        target: 'ES2022',
+        module: 'Node16',
+        moduleResolution: 'Node16',
+        strict: true,
+        esModuleInterop: true,
+        skipLibCheck: true,
+        outDir: './dist',
+        rootDir: '.',
+        declaration: true,
+      },
+      include: ['src/**/*', 'config/**/*'],
+    }, null, 2) + '\n',
+  });
+
+  // .env
+  const envLines = [`HOST=0.0.0.0`, `PORT=${port}`];
+  if (database === 'sqlite') {
+    envLines.push('DATABASE_CLIENT=sqlite', 'DATABASE_FILENAME=.tmp/data.db');
+  } else if (database === 'postgres') {
+    envLines.push('DATABASE_CLIENT=postgres', 'DATABASE_HOST=127.0.0.1', 'DATABASE_PORT=5432', 'DATABASE_NAME=' + kebabCase(name), 'DATABASE_USERNAME=', 'DATABASE_PASSWORD=');
+  } else if (database === 'mysql') {
+    envLines.push('DATABASE_CLIENT=mysql', 'DATABASE_HOST=127.0.0.1', 'DATABASE_PORT=3306', 'DATABASE_NAME=' + kebabCase(name), 'DATABASE_USERNAME=root', 'DATABASE_PASSWORD=');
+  }
+  files.push({ path: '.env', content: envLines.join('\n') + '\n' });
+
+  // .gitignore
+  files.push({
+    path: '.gitignore',
+    content: `node_modules/
+dist/
+.tmp/
+.env
+*.log
+`,
+  });
+
+  // config/server.ts
+  files.push({
+    path: 'config/server.ts',
+    content: `export default {
+  host: '0.0.0.0',
+  port: ${port},
+};
+`,
+  });
+
+  // config/database.ts
+  if (database === 'sqlite') {
+    files.push({
+      path: 'config/database.ts',
+      content: `export default {
+  connection: {
+    client: 'sqlite',
+    connection: { filename: '.tmp/data.db' },
+  },
+};
+`,
+    });
+  } else if (database === 'postgres') {
+    files.push({
+      path: 'config/database.ts',
+      content: `export default {
+  connection: {
+    client: 'postgres',
+    connection: {
+      host: process.env.DATABASE_HOST || '127.0.0.1',
+      port: parseInt(process.env.DATABASE_PORT || '5432', 10),
+      database: process.env.DATABASE_NAME || '${kebabCase(name)}',
+      user: process.env.DATABASE_USERNAME || '',
+      password: process.env.DATABASE_PASSWORD || '',
+    },
+  },
+};
+`,
+    });
+  } else {
+    files.push({
+      path: 'config/database.ts',
+      content: `export default {
+  connection: {
+    client: 'mysql',
+    connection: {
+      host: process.env.DATABASE_HOST || '127.0.0.1',
+      port: parseInt(process.env.DATABASE_PORT || '3306', 10),
+      database: process.env.DATABASE_NAME || '${kebabCase(name)}',
+      user: process.env.DATABASE_USERNAME || 'root',
+      password: process.env.DATABASE_PASSWORD || '',
+    },
+  },
+};
+`,
+    });
+  }
+
+  // config/admin.ts
+  files.push({
+    path: 'config/admin.ts',
+    content: `export default {};
+`,
+  });
+
+  // config/api.ts
+  files.push({
+    path: 'config/api.ts',
+    content: `export default {
+  rest: { prefix: '/api' },
+};
+`,
+  });
+
+  // config/middlewares.ts
+  files.push({
+    path: 'config/middlewares.ts',
+    content: `export default [];
+`,
+  });
+
+  // src/api/.gitkeep
+  files.push({ path: 'src/api/.gitkeep', content: '' });
 
   return files;
 }

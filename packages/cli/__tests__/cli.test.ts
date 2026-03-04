@@ -164,6 +164,7 @@ describe('@apick/cli', () => {
   describe('Built-in commands', () => {
     it('has all required built-in commands', () => {
       const names = builtinCommands.map(c => c.name);
+      // Original 15 commands
       expect(names).toContain('develop');
       expect(names).toContain('start');
       expect(names).toContain('build');
@@ -179,6 +180,18 @@ describe('@apick/cli', () => {
       expect(names).toContain('migration:rollback');
       expect(names).toContain('migration:status');
       expect(names).toContain('migration:generate');
+      // New 7 commands
+      expect(names).toContain('generate:api');
+      expect(names).toContain('generate:controller');
+      expect(names).toContain('generate:service');
+      expect(names).toContain('generate:policy');
+      expect(names).toContain('generate:middleware');
+      expect(names).toContain('generate:plugin');
+      expect(names).toContain('new');
+    });
+
+    it('has 22 built-in commands', () => {
+      expect(builtinCommands).toHaveLength(22);
     });
 
     it('develop command has dev alias', () => {

@@ -423,6 +423,10 @@ export function createServer(opts: {
       controllerResolver = resolver;
     },
 
+    getRoutes() {
+      return registeredRoutes.map(r => ({ method: r.method.toUpperCase(), path: r.path }));
+    },
+
     route(options: RouteOptions) {
       registeredRoutes.push(options);
 

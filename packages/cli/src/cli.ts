@@ -240,62 +240,6 @@ export const startCommand: CliCommand = {
   },
 };
 
-export const buildCommand: CliCommand = {
-  name: 'build',
-  description: 'Compile the APICK project TypeScript',
-  action: async () => {
-    console.log('Building APICK project...');
-  },
-};
-
-export const generateTypesCommand: CliCommand = {
-  name: 'ts:generate-types',
-  description: 'Generate TypeScript type definitions from content type schemas',
-  action: async () => {
-    console.log('Generating TypeScript types...');
-  },
-};
-
-export const routesListCommand: CliCommand = {
-  name: 'routes:list',
-  description: 'List all registered routes',
-  action: async () => {
-    console.log('Listing routes...');
-  },
-};
-
-export const policiesListCommand: CliCommand = {
-  name: 'policies:list',
-  description: 'List all registered policies',
-  action: async () => {
-    console.log('Listing policies...');
-  },
-};
-
-export const middlewaresListCommand: CliCommand = {
-  name: 'middlewares:list',
-  description: 'List all registered middlewares',
-  action: async () => {
-    console.log('Listing middlewares...');
-  },
-};
-
-export const contentTypesListCommand: CliCommand = {
-  name: 'content-types:list',
-  description: 'List all registered content types',
-  action: async () => {
-    console.log('Listing content types...');
-  },
-};
-
-export const consoleCommand: CliCommand = {
-  name: 'console',
-  description: 'Start an interactive REPL with APICK context',
-  action: async () => {
-    console.log('Starting APICK console...');
-  },
-};
-
 export const exportCommand: CliCommand = {
   name: 'export',
   description: 'Export data to a tar.gz archive',
@@ -364,11 +308,31 @@ export const migrationGenerateCommand: CliCommand = {
   },
 };
 
+// Import command modules — these use dynamic imports internally for @apick/core
+import { buildCommand } from './commands/build.js';
+import { generateTypesCommand } from './commands/types.js';
+import { consoleCommand } from './commands/console.js';
+import {
+  contentTypesListCommand, routesListCommand,
+  policiesListCommand, middlewaresListCommand,
+} from './commands/introspect.js';
+import {
+  generateApiCommand, generateControllerCommand, generateServiceCommand,
+  generatePolicyCommand, generateMiddlewareCommand, generatePluginCommand,
+} from './commands/generate.js';
+import { newProjectCommand } from './commands/new-project.js';
+
 // All built-in commands
 export const builtinCommands: CliCommand[] = [
-  developCommand, startCommand, buildCommand,
-  generateTypesCommand, routesListCommand, policiesListCommand,
-  middlewaresListCommand, contentTypesListCommand, consoleCommand,
+  developCommand, startCommand,
+  buildCommand,
+  generateTypesCommand,
+  routesListCommand, policiesListCommand, middlewaresListCommand, contentTypesListCommand,
+  consoleCommand,
   exportCommand, importCommand,
   migrationRunCommand, migrationRollbackCommand, migrationStatusCommand, migrationGenerateCommand,
+  // New commands
+  generateApiCommand, generateControllerCommand, generateServiceCommand,
+  generatePolicyCommand, generateMiddlewareCommand, generatePluginCommand,
+  newProjectCommand,
 ];

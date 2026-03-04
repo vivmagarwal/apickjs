@@ -18,7 +18,7 @@ try {
 
 import { createCli, builtinCommands } from './cli.js';
 
-const cli = createCli('0.3.0');
+const cli = createCli('0.4.0');
 
 for (const cmd of builtinCommands) {
   cli.register(cmd);

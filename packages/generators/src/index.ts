@@ -1,2 +1,6 @@
-export { generateApi, generateController, generateService, generatePolicy, generateMiddleware, generatePlugin } from './generators.js';
-export type { GeneratorOptions, GeneratedFile } from './generators.js';
+export {
+  generateApi, generateController, generateService,
+  generatePolicy, generateMiddleware, generatePlugin,
+  generateProject, writeGeneratedFiles,
+} from './generators.js';
+export type { GeneratorOptions, ProjectOptions, GeneratedFile } from './generators.js';
